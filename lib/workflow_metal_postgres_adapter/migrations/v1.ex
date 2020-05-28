@@ -43,7 +43,7 @@ defmodule WorkflowMetalPostgresAdapter.Migrations.V1 do
       timestamps(updated_at: false)
     end
 
-    create_if_not_exists table("#{prefix}_transition", primary_key: false) do
+    create_if_not_exists table("#{prefix}_transitions", primary_key: false) do
       add :id, :uuid, primary_key: true
       add :workflow_id, :uuid
       add :join_type, Transition.JoinType.type()
@@ -114,7 +114,7 @@ defmodule WorkflowMetalPostgresAdapter.Migrations.V1 do
   def down(schema, prefix) do
     drop_if_exists table("#{prefix}_workflows", schema: schema)
     drop_if_exists table("#{prefix}_places", schema: schema)
-    drop_if_exists table("#{prefix}_transition", schema: schema)
+    drop_if_exists table("#{prefix}_transitions", schema: schema)
     drop_if_exists table("#{prefix}_arcs", schema: schema)
 
     drop_if_exists table("#{prefix}_cases", schema: schema)
