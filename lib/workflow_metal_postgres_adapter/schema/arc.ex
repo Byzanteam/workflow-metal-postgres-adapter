@@ -3,7 +3,7 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Arc do
 
   import EctoEnum
 
-  defenum DirectionType, :"#{@prefix}_arc_direction", [:in, :out], schema: @schema
+  defenum(DirectionType, :"#{@prefix}_arc_direction", [:in, :out], schema: @schema)
 
   schema "#{@prefix}_arcs" do
     field :workflow_id, Ecto.UUID

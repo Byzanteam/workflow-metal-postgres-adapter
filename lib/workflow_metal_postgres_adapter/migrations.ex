@@ -5,8 +5,12 @@ defmodule WorkflowMetalPostgresAdapter.Migrations do
 
   @initial_version 1
   @current_version 1
-  @schema Application.get_env(:workflow_metal_postgres_adapter, WorkflowMetalPostgresAdapter)[:schema] || "public"
-  @prefix Application.get_env(:workflow_metal_postgres_adapter, WorkflowMetalPostgresAdapter)[:prefix] || "workflow"
+  @schema Application.get_env(:workflow_metal_postgres_adapter, WorkflowMetalPostgresAdapter)[
+            :schema
+          ] || "public"
+  @prefix Application.get_env(:workflow_metal_postgres_adapter, WorkflowMetalPostgresAdapter)[
+            :prefix
+          ] || "workflow"
 
   def up(opts \\ []) when is_list(opts) do
     schema = @schema

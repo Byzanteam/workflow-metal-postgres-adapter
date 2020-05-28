@@ -1,10 +1,10 @@
 defmodule WorkflowMetalPostgresAdapter.Schema.Workflow do
-  use Ecto.Schema
+  use WorkflowMetalPostgresAdapter.Schema
 
   import EctoEnum
-  defenum StateEnum, :workflow_state, [:active, :discarded]
+  defenum StateEnum, :"#{@prefix}workflow_state", [:active, :discarded], schema: @schema
 
-  schema "workflow_workflows" do
+  schema "#{@prefix}_workflows" do
     field :state, StateEnum
 
     timestamps(updated_at: false)

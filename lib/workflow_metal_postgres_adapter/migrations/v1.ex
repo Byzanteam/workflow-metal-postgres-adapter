@@ -28,7 +28,6 @@ defmodule WorkflowMetalPostgresAdapter.Migrations.V1 do
     Token.StateType.create_type()
     Arc.DirectionType.create_type()
 
-
     create_if_not_exists table("#{prefix}_workflows", primary_key: false) do
       add :id, :uuid, primary_key: true
       add :state, Workflow.StateEnum.type()

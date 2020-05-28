@@ -3,7 +3,12 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Task do
 
   import EctoEnum
 
-  defenum StateType, :"#{@prefix}_task_state_type", [:started, :allocated, :executing, :completed, :abandoned], schema: @schema
+  defenum(
+    StateType,
+    :"#{@prefix}_task_state_type",
+    [:started, :allocated, :executing, :completed, :abandoned],
+    schema: @schema
+  )
 
   schema "#{@prefix}_tasks" do
     field :workflow_id, Ecto.UUID
