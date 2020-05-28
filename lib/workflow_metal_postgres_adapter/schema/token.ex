@@ -17,4 +17,31 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Token do
 
     timestamps()
   end
+
+  @permit_fields [
+    :id,
+    :workflow_id,
+    :case_id,
+    :place_id,
+    :produced_by_task_id,
+    :locked_by_task_id,
+    :consumed_by_task_id,
+    :payload,
+    :state
+  ]
+
+  @require_fields [
+    :id,
+    :state,
+    :workflow_id,
+    :case_id,
+    :place_id,
+    :produced_by_task_id
+  ]
+
+  def changeset(token, params) do
+    token
+    |> cast(params, @permit_fields)
+    |> validate_required(@require_fields)
+  end
 end

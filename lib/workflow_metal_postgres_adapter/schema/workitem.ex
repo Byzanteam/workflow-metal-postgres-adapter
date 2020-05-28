@@ -20,4 +20,19 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Workitem do
 
     timestamps()
   end
+
+  @permit_fields [
+    :id,
+    :workflow_id,
+    :transition_id,
+    :case_id,
+    :task_id,
+    :output,
+    :state
+  ]
+
+  def changeset(workitem, params) do
+    workitem
+    |> cast(params, @permit_fields)
+  end
 end
