@@ -43,6 +43,8 @@ defmodule WorkflowMetalPostgresAdapter.Migrations.V1 do
       timestamps(updated_at: false)
     end
 
+    create_if_not_exists index("#{prefix}_places", [:workflow_id])
+
     create_if_not_exists table("#{prefix}_transitions", primary_key: false) do
       add :id, :uuid, primary_key: true
       add :workflow_id, :uuid
@@ -54,6 +56,8 @@ defmodule WorkflowMetalPostgresAdapter.Migrations.V1 do
       timestamps(updated_at: false)
     end
 
+    create_if_not_exists index("#{prefix}_transitions", [:workflow_id])
+
     create_if_not_exists table("#{prefix}_arcs", primary_key: false) do
       add :id, :uuid, primary_key: true
       add :workflow_id, :uuid
@@ -64,6 +68,10 @@ defmodule WorkflowMetalPostgresAdapter.Migrations.V1 do
       timestamps(updated_at: false)
     end
 
+    create_if_not_exists index("#{prefix}_arcs", [:workflow_id])
+    create_if_not_exists index("#{prefix}_arcs", [:place_id])
+    create_if_not_exists index("#{prefix}_arcs", [:transition_id])
+
     create_if_not_exists table("#{prefix}_cases", primary_key: false) do
       add :id, :uuid, primary_key: true
       add :workflow_id, :uuid
@@ -71,6 +79,8 @@ defmodule WorkflowMetalPostgresAdapter.Migrations.V1 do
 
       timestamps()
     end
+
+    create_if_not_exists index("#{prefix}_cases", [:workflow_id])
 
     create_if_not_exists table("#{prefix}_tasks", primary_key: false) do
       add :id, :uuid, primary_key: true
@@ -81,6 +91,10 @@ defmodule WorkflowMetalPostgresAdapter.Migrations.V1 do
 
       timestamps()
     end
+
+    create_if_not_exists index("#{prefix}_tasks", [:workflow_id])
+    create_if_not_exists index("#{prefix}_tasks", [:transition_id])
+    create_if_not_exists index("#{prefix}_tasks", [:case_id])
 
     create_if_not_exists table("#{prefix}_tokens", primary_key: false) do
       add :id, :uuid, primary_key: true
@@ -96,6 +110,11 @@ defmodule WorkflowMetalPostgresAdapter.Migrations.V1 do
       timestamps()
     end
 
+    create_if_not_exists index("#{prefix}_tokens", [:workflow_id])
+    create_if_not_exists index("#{prefix}_tokens", [:case_id])
+    create_if_not_exists index("#{prefix}_tokens", [:place_id])
+    create_if_not_exists index("#{prefix}_tokens", [:locked_by_task_id])
+
     create_if_not_exists table("#{prefix}_workitems", primary_key: false) do
       add :id, :uuid, primary_key: true
       add :workflow_id, :uuid
@@ -107,6 +126,11 @@ defmodule WorkflowMetalPostgresAdapter.Migrations.V1 do
 
       timestamps()
     end
+
+    create_if_not_exists index("#{prefix}_workitems", [:workflow_id])
+    create_if_not_exists index("#{prefix}_workitems", [:transition_id])
+    create_if_not_exists index("#{prefix}_workitems", [:case_id])
+    create_if_not_exists index("#{prefix}_workitems", [:task_id])
 
     Helper.record_version(schema, prefix, 1)
   end
