@@ -27,5 +27,3 @@ workflow_metal_postgres_adapter-*.tar
 # dialyzer
 /priv/plts/*.plt
 /priv/plts/*.plt.hash
-
-dev.exs
