@@ -70,8 +70,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.WorkflowTest do
       {:ok, workflow} = Workflow.create_workflow(@adapter_meta, @params)
       assert :ok = Workflow.delete_workflow(@adapter_meta, workflow.id)
 
-      assert {:error, :workflow_not_found} =
-               Workflow.fetch_workflow(@adapter_meta, workflow.id)
+      assert {:error, :workflow_not_found} = Workflow.fetch_workflow(@adapter_meta, workflow.id)
     end
   end
 end

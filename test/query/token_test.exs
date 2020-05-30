@@ -23,8 +23,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.TokenTest do
     {:ok, workflow} = Workflow.create_workflow(@adapter_meta, @params)
     {:ok, workflow} = Workflow.fetch_workflow(@adapter_meta, workflow.id)
 
-    {:ok, workflow_case} =
-      Case.create_case(@adapter_meta, %{workflow_id: workflow.id})
+    {:ok, workflow_case} = Case.create_case(@adapter_meta, %{workflow_id: workflow.id})
 
     %{transitions: [transition]} = workflow
 
@@ -37,8 +36,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.TokenTest do
 
     {:ok, task} = Task.create_task(@adapter_meta, task_params)
 
-    {:ok, start_place, _end_place} =
-      Place.fetch_edge_places(@adapter_meta, workflow.id)
+    {:ok, start_place, _end_place} = Place.fetch_edge_places(@adapter_meta, workflow.id)
 
     %{
       task: task,

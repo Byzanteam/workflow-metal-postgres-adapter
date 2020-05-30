@@ -133,7 +133,11 @@ defmodule WorkflowMetalPostgresAdapter.Query.Token do
 
   defp do_consume_tokens(tokens, repo, task_id \\ nil) do
     query = from t in Token, where: t.id in ^Enum.map(tokens, & &1.id)
-    repo.update_all(query, set: [state: :consumed, updated_at: now(), consumed_by_task_id: task_id])
+
+    repo.update_all(query,
+      set: [state: :consumed, updated_at: now(), consumed_by_task_id: task_id]
+    )
+
     {:ok, repo.all(query)}
   end
 end

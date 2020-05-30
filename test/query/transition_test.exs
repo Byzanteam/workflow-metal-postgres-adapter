@@ -27,15 +27,20 @@ defmodule WorkflowMetalPostgresAdapter.Query.TransitionTest do
       {:ok, start_place, end_place} = Place.fetch_edge_places(adapter_meta, workflow.id)
       {:ok, %{transitions: [transition]}} = Workflow.fetch_workflow(adapter_meta, workflow.id)
       assert {:ok, []} = Transition.fetch_transitions(adapter_meta, start_place.id, :in)
-      assert {:ok, [fetch_transition]} = Transition.fetch_transitions(adapter_meta, start_place.id, :out)
+
+      assert {:ok, [fetch_transition]} =
+               Transition.fetch_transitions(adapter_meta, start_place.id, :out)
+
       assert fetch_transition.id == transition.id
 
       assert {:ok, []} = Transition.fetch_transitions(adapter_meta, end_place.id, :out)
-      assert {:ok, [fetch_transition]} = Transition.fetch_transitions(adapter_meta, end_place.id, :in)
+
+      assert {:ok, [fetch_transition]} =
+               Transition.fetch_transitions(adapter_meta, end_place.id, :in)
+
       assert fetch_transition.id == transition.id
     end
   end
-
 
   describe "fetch_transition/2" do
     test "success", %{workflow: workflow, adapter_meta: adapter_meta} do
@@ -45,7 +50,8 @@ defmodule WorkflowMetalPostgresAdapter.Query.TransitionTest do
     end
 
     test "not found", %{adapter_meta: adapter_meta} do
-      assert {:error, :transition_not_found} = Transition.fetch_transition(adapter_meta, Ecto.UUID.generate())
+      assert {:error, :transition_not_found} =
+               Transition.fetch_transition(adapter_meta, Ecto.UUID.generate())
     end
   end
 end

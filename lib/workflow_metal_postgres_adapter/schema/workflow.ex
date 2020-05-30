@@ -4,7 +4,7 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Workflow do
   alias WorkflowMetalPostgresAdapter.Schema.{Place, Transition, Arc}
 
   import EctoEnum
-  defenum StateEnum, :"#{@prefix}workflow_state", [:active, :discarded], schema: @schema
+  defenum(StateEnum, :"#{@prefix}workflow_state", [:active, :discarded], schema: @schema)
 
   schema "#{@prefix}_workflows" do
     field :state, StateEnum

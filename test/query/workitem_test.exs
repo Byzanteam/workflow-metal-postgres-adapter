@@ -21,8 +21,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.WorkitemTest do
     {:ok, workflow} = Workflow.create_workflow(@adapter_meta, @params)
     {:ok, workflow} = Workflow.fetch_workflow(@adapter_meta, workflow.id)
 
-    {:ok, workflow_case} =
-      Case.create_case(@adapter_meta, %{workflow_id: workflow.id})
+    {:ok, workflow_case} = Case.create_case(@adapter_meta, %{workflow_id: workflow.id})
 
     transition = hd(workflow.transitions)
 

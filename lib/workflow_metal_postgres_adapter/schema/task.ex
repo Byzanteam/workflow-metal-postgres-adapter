@@ -20,7 +20,7 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Task do
     timestamps()
   end
 
-  @permit_fields  [
+  @permit_fields [
     :id,
     :workflow_id,
     :transition_id,
