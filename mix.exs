@@ -49,7 +49,8 @@ defmodule WorkflowMetalPostgresAdapter.MixProject do
 
   defp aliases do
     [
-      "code.check": ["format --check-formatted", "doctor --summary", "credo --strict", "dialyzer"]
+      "code.check": ["format --check-formatted", "doctor --summary", "credo --strict", "dialyzer"],
+      test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
 end
