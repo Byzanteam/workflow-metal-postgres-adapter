@@ -34,7 +34,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.WorkflowTest do
   }
 
   test "create workflows with places transitions and arcs" do
-    assert {:ok, workflow} = Workflow.create_workflow(WorkflowMetalPostgresAdapter, @params)
+    assert {:ok, workflow} = Workflow.create_workflow(@adapter_meta, @params)
 
     arcs = Repo.all(Arc)
     transitions = Repo.all(Transition)
@@ -48,9 +48,9 @@ defmodule WorkflowMetalPostgresAdapter.Query.WorkflowTest do
 
   describe "fetch workflow/2" do
     test "success" do
-      {:ok, workflow} = Workflow.create_workflow(WorkflowMetalPostgresAdapter, @params)
+      {:ok, workflow} = Workflow.create_workflow(@adapter_meta, @params)
 
-      assert {:ok, workflow} = Workflow.fetch_workflow(WorkflowMetalPostgresAdapter, workflow.id)
+      assert {:ok, workflow} = Workflow.fetch_workflow(@adapter_meta, workflow.id)
 
       %{places: places, transitions: transitions, arcs: arcs} = workflow
 
@@ -61,17 +61,17 @@ defmodule WorkflowMetalPostgresAdapter.Query.WorkflowTest do
 
     test "not found" do
       assert {:error, :workflow_not_found} =
-               Workflow.fetch_workflow(WorkflowMetalPostgresAdapter, Ecto.UUID.generate())
+               Workflow.fetch_workflow(@adapter_meta, Ecto.UUID.generate())
     end
   end
 
   describe "delete workflow/2" do
     test "ok" do
-      {:ok, workflow} = Workflow.create_workflow(WorkflowMetalPostgresAdapter, @params)
-      assert :ok = Workflow.delete_workflow(WorkflowMetalPostgresAdapter, workflow.id)
+      {:ok, workflow} = Workflow.create_workflow(@adapter_meta, @params)
+      assert :ok = Workflow.delete_workflow(@adapter_meta, workflow.id)
 
       assert {:error, :workflow_not_found} =
-               Workflow.fetch_workflow(WorkflowMetalPostgresAdapter, workflow.id)
+               Workflow.fetch_workflow(@adapter_meta, workflow.id)
     end
   end
 end

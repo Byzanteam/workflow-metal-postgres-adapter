@@ -14,6 +14,11 @@ defmodule WorkflowMetalPostgresAdapter do
     Workitem
   }
 
+  def child_spec(_application, config) do
+    repo = Keyword.fetch!(config, :repo)
+    {:ok, nil, [repo: repo]}
+  end
+
   defdelegate create_workflow(adapter_meta, workflow_params), to: Workflow
   defdelegate fetch_workflow(adapter_meta, workflow_id), to: Workflow
   defdelegate delete_workflow(adapter_meta, workflow_id), to: Workflow

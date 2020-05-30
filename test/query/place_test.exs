@@ -18,8 +18,8 @@ defmodule WorkflowMetalPostgresAdapter.Query.PlaceTest do
   }
 
   setup do
-    {:ok, workflow} = Workflow.create_workflow(WorkflowMetalPostgresAdapter, @params)
-    %{workflow: workflow, adapter_meta: WorkflowMetalPostgresAdapter}
+    {:ok, workflow} = Workflow.create_workflow(@adapter_meta, @params)
+    %{workflow: workflow, adapter_meta: @adapter_meta}
   end
 
   describe "fetch_edge_places/2" do

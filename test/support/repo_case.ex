@@ -9,6 +9,9 @@ defmodule WorkflowMetalPostgresAdapter.RepoCase do
       import Ecto.Query
       import WorkflowMetalPostgresAdapter.RepoCase
 
+      @adapter_meta [
+        repo: WorkflowMetalPostgresAdapter.Repo
+      ]
       # and any other stuff
     end
   end

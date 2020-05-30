@@ -18,9 +18,9 @@ defmodule WorkflowMetalPostgresAdapter.Query.ArcTest do
   }
 
   setup do
-    {:ok, workflow} = Workflow.create_workflow(WorkflowMetalPostgresAdapter, @params)
-    {:ok, workflow} = Workflow.fetch_workflow(WorkflowMetalPostgresAdapter, workflow.id)
-    %{workflow: workflow, adapter_meta: WorkflowMetalPostgresAdapter}
+    {:ok, workflow} = Workflow.create_workflow(@adapter_meta, @params)
+    {:ok, workflow} = Workflow.fetch_workflow(@adapter_meta, workflow.id)
+    %{workflow: workflow, adapter_meta: @adapter_meta}
   end
 
   describe "fetch_arcs/3" do
