@@ -91,9 +91,9 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workitem do
     do_update_workitem(repo, workitem, %{state: :started})
   end
 
-  defp try_update_workitem(repo, %{state: state} = workitem, :completed)
+  defp try_update_workitem(repo, %{state: state} = workitem, {:completed, workitem_output})
        when state in [:created, :started] do
-    do_update_workitem(repo, workitem, %{state: :completed})
+    do_update_workitem(repo, workitem, %{state: :completed, output: workitem_output})
   end
 
   defp try_update_workitem(repo, %{state: state} = workitem, :abandoned)

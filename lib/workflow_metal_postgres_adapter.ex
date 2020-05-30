@@ -32,12 +32,14 @@ defmodule WorkflowMetalPostgresAdapter do
 
   defdelegate create_task(adapter_meta, task_params), to: Task
   defdelegate fetch_task(adapter_meta, task_id), to: Task
+  defdelegate fetch_tasks(adapter_meta, case_id, fetch_tasks_options), to: Task
   defdelegate update_task(adapter_meta, task_id, update_task_params), to: Task
 
   defdelegate issue_token(adapter_meta, token_params), to: Token
   defdelegate lock_tokens(adapter_meta, token_ids, locked_by_task_id), to: Token
   defdelegate unlock_tokens(adapter_meta, locked_by_task_id), to: Token
   defdelegate consume_tokens(adapter_meta, locked_by_task_id), to: Token
+  defdelegate fetch_tokens(adapter_meta, case_id, fetch_tokens_options), to: Token
 
   defdelegate create_workitem(adapter_meta, workitem_params), to: Workitem
   defdelegate fetch_workitem(adapter_meta, workitem_id), to: Workitem

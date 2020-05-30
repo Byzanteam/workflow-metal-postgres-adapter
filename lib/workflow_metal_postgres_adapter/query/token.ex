@@ -29,6 +29,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Token do
           place_id: place.id,
           produced_by_task_id: produced_by_task_id
         })
+        |> Map.put_new(:state, :free)
 
       repo = repo(adapter_meta)
 
@@ -48,19 +49,58 @@ defmodule WorkflowMetalPostgresAdapter.Query.Token do
 
   def unlock_tokens(adapter_meta, locked_by_task_id) do
     with {:ok, task} <- Task.fetch_task(adapter_meta, locked_by_task_id) do
-      tokens_query = from t in Token, where: t.state == ^:locked, where: t.locked_by_task_id == ^locked_by_task_id, where: t.case_id == ^task.case_id
+      tokens_query =
+        from t in Token,
+          where: t.state == ^:locked,
+          where: t.locked_by_task_id == ^locked_by_task_id,
+          where: t.case_id == ^task.case_id
+
       repo = repo(adapter_meta)
       tokens = repo.all(tokens_query)
       do_unlock_tokens(tokens, repo)
     end
   end
 
-  def consume_tokens(adapter_meta, locked_by_task_id) do
-    with {:ok, task} <- Task.fetch_task(adapter_meta, locked_by_task_id) do
-      tokens_query = from t in Token, where: t.state == ^:locked, where: t.locked_by_task_id == ^locked_by_task_id, where: t.case_id == ^task.case_id
+  def consume_tokens(adapter_meta, {case_id, :termination}) do
+    with {:ok, case} <- Case.fetch_case(adapter_meta, case_id),
+         {:ok, tokens} <- fetch_tokens(adapter_meta, case.id, states: [:free]) do
+      tokens_query = from t in Token, where: t.id in ^Enum.map(tokens, & &1.id)
       repo = repo(adapter_meta)
       tokens = repo.all(tokens_query)
       do_consume_tokens(tokens, repo)
+    end
+  end
+
+  def consume_tokens(adapter_meta, locked_by_task_id) do
+    with {:ok, task} <- Task.fetch_task(adapter_meta, locked_by_task_id) do
+      tokens_query =
+        from t in Token,
+          where: t.state == ^:locked,
+          where: t.locked_by_task_id == ^locked_by_task_id,
+          where: t.case_id == ^task.case_id
+
+      repo = repo(adapter_meta)
+      tokens = repo.all(tokens_query)
+      do_consume_tokens(tokens, repo, task.id)
+    end
+  end
+
+  def fetch_tokens(adapter_meta, case_id, fetch_tokens_options) do
+    with {:ok, case} <- Case.fetch_case(adapter_meta, case_id) do
+      states = Keyword.get(fetch_tokens_options, :states, [])
+      locked_by_task_id = Keyword.get(fetch_tokens_options, :locked_by_task_id)
+
+      base_query = from t in Token, where: t.case_id == ^case.id, where: t.state in ^states
+
+      query =
+        if locked_by_task_id do
+          from q in base_query, where: q.locked_by_task_id == ^locked_by_task_id
+        else
+          base_query
+        end
+
+      tokens = repo(adapter_meta).all(query)
+      {:ok, tokens}
     end
   end
 
@@ -72,7 +112,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Token do
     repo = repo(adapter_meta)
     tokens = repo.all(query)
 
-    if length(tokens) === token_ids do
+    if length(tokens) === length(token_ids) do
       {:ok, tokens}
     else
       {:error, :tokens_not_available}
@@ -91,9 +131,9 @@ defmodule WorkflowMetalPostgresAdapter.Query.Token do
     {:ok, repo.all(query)}
   end
 
-  defp do_consume_tokens(tokens, repo) do
+  defp do_consume_tokens(tokens, repo, task_id \\ nil) do
     query = from t in Token, where: t.id in ^Enum.map(tokens, & &1.id)
-    repo.update_all(query, set: [state: :consumed, updated_at: now()])
+    repo.update_all(query, set: [state: :consumed, updated_at: now(), consumed_by_task_id: task_id])
     {:ok, repo.all(query)}
   end
 end

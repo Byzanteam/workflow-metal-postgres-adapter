@@ -88,6 +88,7 @@ defmodule WorkflowMetalPostgresAdapter.Migrations.V1 do
       add :transition_id, :uuid
       add :case_id, :uuid
       add :state, Task.StateType.type()
+      add :token_payload, :map
 
       timestamps()
     end

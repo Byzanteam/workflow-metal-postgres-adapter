@@ -2,18 +2,21 @@ defmodule WorkflowMetalPostgresAdapter.Query.Case do
   import WorkflowMetalPostgresAdapter.Query.Helper
 
   alias WorkflowMetalPostgresAdapter.Schema.Case
+  alias WorkflowMetalPostgresAdapter.Query.Workflow
 
   def create_case(adapter_meta, case_params) do
     %{workflow_id: workflow_id} = case_params
 
-    workflow_case = %Case{
-      id: Ecto.UUID.generate(),
-      workflow_id: workflow_id,
-      state: :created
-    }
+    with {:ok, workflow} <- Workflow.fetch_workflow(adapter_meta, workflow_id) do
+      workflow_case = %Case{
+        id: Ecto.UUID.generate(),
+        workflow_id: workflow.id,
+        state: :created
+      }
 
-    repo = repo(adapter_meta)
-    repo.insert(workflow_case)
+      repo = repo(adapter_meta)
+      repo.insert(workflow_case)
+    end
   end
 
   def fetch_case(adapter_meta, case_id) do
@@ -44,7 +47,8 @@ defmodule WorkflowMetalPostgresAdapter.Query.Case do
     do_update_case(repo, workflow_case, :finished)
   end
 
-  defp try_update_case(repo, %{state: state} = workflow_case, :canceled) when state in [:created, :active] do
+  defp try_update_case(repo, %{state: state} = workflow_case, :canceled)
+       when state in [:created, :active] do
     do_update_case(repo, workflow_case, :canceled)
   end
 

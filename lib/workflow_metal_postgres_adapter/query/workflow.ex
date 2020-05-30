@@ -1,5 +1,6 @@
 defmodule WorkflowMetalPostgresAdapter.Query.Workflow do
   import WorkflowMetalPostgresAdapter.Query.Helper
+  import Ecto.Query
 
   alias WorkflowMetalPostgresAdapter.Schema.{Workflow, Place, Transition, Arc}
 
@@ -76,7 +77,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workflow do
     |> Multi.insert_all(:arcs, Arc, arc_params)
     |> repo.transaction()
     |> case do
-      {:ok, _} -> :ok
+      {:ok, %{workflow: workflow}} -> {:ok, workflow}
       error -> error
     end
   end
@@ -84,16 +85,19 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workflow do
   def fetch_workflow(adapter_meta, workflow_id) do
     repo = repo(adapter_meta)
 
-    Workflow
-    |> repo.get(workflow_id)
-    |> repo.preload([:places, :transitions, :arcs])
+    case repo.get(Workflow, workflow_id) do
+      nil ->
+        {:error, :workflow_not_found}
+
+      workflow ->
+        {:ok, repo.preload(workflow, [:places, :transitions, :arcs])}
+    end
   end
 
   def delete_workflow(adapter_meta, workflow_id) do
     repo = repo(adapter_meta)
-
-    Workflow
-    |> repo.get(workflow_id)
-    |> repo.delete()
+    query = from w in Workflow, where: w.id == ^workflow_id
+    repo.delete_all(query)
+    :ok
   end
 end

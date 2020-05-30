@@ -3,15 +3,16 @@ defmodule WorkflowMetalPostgresAdapter.Query.Place do
   import Ecto.Query
 
   alias WorkflowMetalPostgresAdapter.Schema.{Place, Arc}
-  alias WorkflowMetalPostgresAdapter.Query.Transition
+  alias WorkflowMetalPostgresAdapter.Query.{Transition, Workflow}
 
   def fetch_edge_places(adapter_meta, workflow_id) do
-    repo = repo(adapter_meta)
+    with {:ok, workflow} <- Workflow.fetch_workflow(adapter_meta, workflow_id) do
+      repo = repo(adapter_meta)
+      start_place = repo.get_by(Place, workflow_id: workflow.id, type: :start)
+      end_place = repo.get_by(Place, workflow_id: workflow.id, type: :end)
 
-    start_place = repo.get_by(Place, workflow_id: workflow_id, type: :start)
-    end_place = repo.get_by(Place, workflow_id: workflow_id, type: :end)
-
-    {:ok, start_place, end_place}
+      {:ok, start_place, end_place}
+    end
   end
 
   def fetch_places(adapter_meta, transition_id, arc_direction) do

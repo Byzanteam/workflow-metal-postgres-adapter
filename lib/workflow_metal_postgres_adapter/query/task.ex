@@ -1,5 +1,6 @@
 defmodule WorkflowMetalPostgresAdapter.Query.Task do
   import WorkflowMetalPostgresAdapter.Query.Helper
+  import Ecto.Query
 
   alias WorkflowMetalPostgresAdapter.Schema.Task
   alias WorkflowMetalPostgresAdapter.Query.{Workflow, Transition, Case}
@@ -34,6 +35,26 @@ defmodule WorkflowMetalPostgresAdapter.Query.Task do
     case repo.get(Task, task_id) do
       nil -> {:error, :task_not_found}
       task -> {:ok, task}
+    end
+  end
+
+  def fetch_tasks(adapter_meta, case_id, fetch_tasks_options) do
+    with {:ok, case} <- Case.fetch_case(adapter_meta, case_id) do
+      states = Keyword.get(fetch_tasks_options, :states, [])
+      transition_id = Keyword.get(fetch_tasks_options, :transition_id)
+
+      base_query = from t in Task, where: t.case_id == ^case.id, where: t.state in ^states
+
+      query =
+        if transition_id do
+          from q in base_query, where: q.transition_id == ^transition_id
+        else
+          base_query
+        end
+
+      tasks = repo(adapter_meta).all(query)
+
+      {:ok, tasks}
     end
   end
 
