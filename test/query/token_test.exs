@@ -36,7 +36,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.TokenTest do
 
     {:ok, task} = Task.create_task(@adapter_meta, task_params)
 
-    {:ok, start_place, _end_place} = Place.fetch_edge_places(@adapter_meta, workflow.id)
+    {:ok, {start_place, _end_place}} = Place.fetch_edge_places(@adapter_meta, workflow.id)
 
     %{
       task: task,

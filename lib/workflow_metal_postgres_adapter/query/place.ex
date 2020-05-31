@@ -11,7 +11,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Place do
       start_place = repo.get_by(Place, workflow_id: workflow.id, type: :start)
       end_place = repo.get_by(Place, workflow_id: workflow.id, type: :end)
 
-      {:ok, start_place, end_place}
+      {:ok, {start_place, end_place}}
     end
   end
 

@@ -24,7 +24,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.TransitionTest do
 
   describe "fetch_transitions/2" do
     test "success", %{workflow: workflow, adapter_meta: adapter_meta} do
-      {:ok, start_place, end_place} = Place.fetch_edge_places(adapter_meta, workflow.id)
+      {:ok, {start_place, end_place}} = Place.fetch_edge_places(adapter_meta, workflow.id)
       {:ok, %{transitions: [transition]}} = Workflow.fetch_workflow(adapter_meta, workflow.id)
       assert {:ok, []} = Transition.fetch_transitions(adapter_meta, start_place.id, :in)
 
