@@ -17,7 +17,7 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Token do
     field :locked_by_task_id, Ecto.UUID
     field :consumed_by_task_id, Ecto.UUID
     field :state, StateType
-    field :payload, :map
+    field :payload, {:array, :map}
 
     timestamps()
   end
@@ -42,6 +42,10 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Token do
     :place_id,
     :produced_by_task_id
   ]
+
+  def changeset(token, params) when is_struct(params) do
+    changeset(token, Map.from_struct(params))
+  end
 
   def changeset(token, params) do
     token

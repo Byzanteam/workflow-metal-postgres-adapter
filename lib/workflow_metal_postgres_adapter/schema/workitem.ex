@@ -32,6 +32,10 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Workitem do
     :state
   ]
 
+  def changeset(workitem, params) when is_struct(params) do
+    changeset(workitem, Map.from_struct(params))
+  end
+
   def changeset(workitem, params) do
     workitem
     |> cast(params, @permit_fields)

@@ -22,6 +22,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Task do
           transition_id: transition.id,
           case_id: workflow_case.id
         })
+        |> Map.put_new(:state, :started)
 
       repo = repo(adapter_meta)
 
@@ -29,7 +30,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Task do
     end
   end
 
-  def fetch_task(adapter_meta, task_id) do
+  def fetch_task(adapter_meta, task_id) when is_binary(task_id) do
     repo = repo(adapter_meta)
 
     case repo.get(Task, task_id) do

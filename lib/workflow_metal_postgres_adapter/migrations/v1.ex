@@ -91,7 +91,7 @@ defmodule WorkflowMetalPostgresAdapter.Migrations.V1 do
       add :transition_id, :uuid
       add :case_id, :uuid
       add :state, Task.StateType.type()
-      add :token_payload, :map
+      add :token_payload, {:array, :map}
 
       timestamps()
     end
@@ -109,7 +109,7 @@ defmodule WorkflowMetalPostgresAdapter.Migrations.V1 do
       add :locked_by_task_id, :uuid
       add :consumed_by_task_id, :uuid
       add :state, Token.StateType.type()
-      add :payload, :map
+      add :payload, {:array, :map}
 
       timestamps()
     end

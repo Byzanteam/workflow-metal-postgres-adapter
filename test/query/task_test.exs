@@ -142,7 +142,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.TaskTest do
       assert task.state == :allocated
       assert {:ok, task} = Task.update_task(adapter_meta, task.id, :executing)
       assert task.state == :executing
-      assert {:ok, task} = Task.update_task(adapter_meta, task.id, {:completed, %{}})
+      assert {:ok, task} = Task.update_task(adapter_meta, task.id, {:completed, []})
       assert task.state == :completed
     end
 

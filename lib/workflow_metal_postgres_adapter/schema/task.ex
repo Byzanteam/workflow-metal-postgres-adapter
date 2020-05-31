@@ -16,7 +16,7 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Task do
     field :transition_id, Ecto.UUID
     field :case_id, Ecto.UUID
     field :state, StateType
-    field :token_payload, :map
+    field :token_payload, {:array, :map}
 
     timestamps()
   end

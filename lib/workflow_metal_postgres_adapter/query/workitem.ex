@@ -25,6 +25,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workitem do
           case_id: workflow_case.id,
           task_id: task.id
         })
+        |> Map.put_new(:state, :created)
 
       repo = repo(adapter_meta)
 
