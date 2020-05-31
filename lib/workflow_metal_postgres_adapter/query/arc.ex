@@ -9,7 +9,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Arc do
     query =
       from a in Arc,
         where: a.transition_id == ^transition_id,
-        where: a.direction == ^arc_direction
+        where: a.direction == ^reversed_arc_direction(arc_direction)
 
     repo = repo(adapter_meta)
     {:ok, repo.all(query)}
