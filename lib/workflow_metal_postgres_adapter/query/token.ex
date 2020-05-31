@@ -7,6 +7,11 @@ defmodule WorkflowMetalPostgresAdapter.Query.Token do
 
   @genesis_uuid "00000000-0000-0000-0000-000000000000"
 
+  @doc """
+  Issue a token.
+
+  If produced_by_task_id is `:genesis`, the token is a genesis token.
+  """
   def issue_token(adapter_meta, token_params) do
     %{
       workflow_id: workflow_id,
@@ -39,6 +44,9 @@ defmodule WorkflowMetalPostgresAdapter.Query.Token do
     end
   end
 
+  @doc """
+  Lock tokens atomically.
+  """
   def lock_tokens(adapter_meta, token_ids, locked_by_task_id) do
     with {:ok, task} <- Task.fetch_task(adapter_meta, locked_by_task_id),
          {:ok, tokens} <-
@@ -47,6 +55,9 @@ defmodule WorkflowMetalPostgresAdapter.Query.Token do
     end
   end
 
+  @doc """
+  Unlock tokens that locked by the task.
+  """
   def unlock_tokens(adapter_meta, locked_by_task_id) do
     with {:ok, task} <- Task.fetch_task(adapter_meta, locked_by_task_id) do
       tokens_query =
@@ -61,6 +72,9 @@ defmodule WorkflowMetalPostgresAdapter.Query.Token do
     end
   end
 
+  @doc """
+  Consume tokens that locked by the task.
+  """
   def consume_tokens(adapter_meta, {case_id, :termination}) do
     with {:ok, case} <- Case.fetch_case(adapter_meta, case_id),
          {:ok, tokens} <- fetch_tokens(adapter_meta, case.id, states: [:free]) do
@@ -85,6 +99,9 @@ defmodule WorkflowMetalPostgresAdapter.Query.Token do
     end
   end
 
+  @doc """
+  Retrive tokens of the task.
+  """
   def fetch_tokens(adapter_meta, case_id, fetch_tokens_options) do
     with {:ok, case} <- Case.fetch_case(adapter_meta, case_id) do
       states = Keyword.get(fetch_tokens_options, :states, [])

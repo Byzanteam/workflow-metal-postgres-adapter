@@ -1,4 +1,8 @@
 defmodule WorkflowMetalPostgresAdapter.Schema.Token do
+  @moduledoc """
+  `:genesis` the first token.
+  `:termination` the last token.
+  """
   use WorkflowMetalPostgresAdapter.Schema
 
   import EctoEnum

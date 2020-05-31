@@ -1,4 +1,8 @@
 defmodule WorkflowMetalPostgresAdapter.Schema.Transition do
+  @moduledoc """
+  Present a transition.
+  """
+
   use WorkflowMetalPostgresAdapter.Schema
 
   import EctoEnum

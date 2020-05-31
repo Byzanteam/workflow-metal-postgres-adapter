@@ -1,4 +1,7 @@
 defmodule WorkflowMetalPostgresAdapter.Migrations.V1 do
+  @moduledoc """
+  Init migration for WorkflowMetalPostgresAdapter.
+  """
   use Ecto.Migration
 
   alias WorkflowMetalPostgresAdapter.Schema.{

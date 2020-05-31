@@ -1,4 +1,7 @@
 defmodule WorkflowMetalPostgresAdapter.Schema.Workflow do
+  @moduledoc """
+  Present a workflow.
+  """
   use WorkflowMetalPostgresAdapter.Schema
 
   alias WorkflowMetalPostgresAdapter.Schema.{Place, Transition, Arc}

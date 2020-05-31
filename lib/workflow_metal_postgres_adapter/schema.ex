@@ -1,4 +1,7 @@
 defmodule WorkflowMetalPostgresAdapter.Schema do
+  @moduledoc """
+  WorkflowMetalPostgresAdapter custom schema
+  """
   defmacro __using__(_) do
     quote do
       use Ecto.Schema

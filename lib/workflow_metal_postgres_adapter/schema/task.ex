@@ -1,4 +1,5 @@
 defmodule WorkflowMetalPostgresAdapter.Schema.Task do
+  @moduledoc false
   use WorkflowMetalPostgresAdapter.Schema
 
   import EctoEnum

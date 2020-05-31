@@ -1,4 +1,16 @@
 defmodule WorkflowMetalPostgresAdapter.Schema.Place do
+  @moduledoc """
+  Present a place.
+
+  There is one `:start`, one `:end`, and several `:normal` places in a workflow.
+
+  ## Type
+
+  - `:normal`
+  - `:start`
+  - `:end`
+  """
+
   use WorkflowMetalPostgresAdapter.Schema
 
   import EctoEnum
