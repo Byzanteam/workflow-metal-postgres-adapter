@@ -34,7 +34,6 @@ defmodule WorkflowMetalPostgresAdapter.Query.Token do
           place_id: place.id,
           produced_by_task_id: produced_by_task_id
         })
-        |> Map.put_new(:state, :free)
 
       repo = repo(adapter_meta)
 

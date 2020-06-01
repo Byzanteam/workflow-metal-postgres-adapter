@@ -22,7 +22,6 @@ defmodule WorkflowMetalPostgresAdapter.Query.Task do
           transition_id: transition.id,
           case_id: workflow_case.id
         })
-        |> Map.put_new(:state, :started)
 
       repo = repo(adapter_meta)
 

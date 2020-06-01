@@ -16,7 +16,7 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Token do
     field :produced_by_task_id, Ecto.UUID
     field :locked_by_task_id, Ecto.UUID
     field :consumed_by_task_id, Ecto.UUID
-    field :state, StateType
+    field :state, StateType, default: :free
     field :payload, {:array, :map}
 
     timestamps()

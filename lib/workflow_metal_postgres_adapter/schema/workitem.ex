@@ -16,7 +16,7 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Workitem do
     field :transition_id, Ecto.UUID
     field :case_id, Ecto.UUID
     field :task_id, Ecto.UUID
-    field :state, StateType
+    field :state, StateType, default: :created
     field :output, :map
 
     timestamps()
