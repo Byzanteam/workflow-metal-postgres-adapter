@@ -28,11 +28,11 @@ defmodule WorkflowMetalPostgresAdapter.Query.ArcTest do
       %{transitions: [transition]} = workflow
       {:ok, {start_place, end_place}} = Place.fetch_edge_places(adapter_meta, workflow.id)
       assert {:ok, [arc]} = Arc.fetch_arcs(adapter_meta, {:transition, transition.id}, :in)
-      assert arc.direction == :in
-      assert arc.place_id == end_place.id
-      assert {:ok, [arc]} = Arc.fetch_arcs(adapter_meta, {:transition, transition.id}, :out)
       assert arc.direction == :out
       assert arc.place_id == start_place.id
+      assert {:ok, [arc]} = Arc.fetch_arcs(adapter_meta, {:transition, transition.id}, :out)
+      assert arc.direction == :in
+      assert arc.place_id == end_place.id
     end
 
     test "place", %{workflow: workflow, adapter_meta: adapter_meta} do
