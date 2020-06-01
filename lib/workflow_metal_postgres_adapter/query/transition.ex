@@ -13,11 +13,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Transition do
         {:error, :transition_not_found}
 
       transition ->
-        {:ok,
-         %{
-           transition
-           | executor: String.to_existing_atom(transition.executor)
-         }}
+        {:ok, transition}
     end
   end
 
@@ -39,11 +35,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Transition do
         transition_ids ->
           transition_query = from t in Transition, where: t.id in ^transition_ids
 
-          {:ok,
-           repo.all(transition_query)
-           |> Enum.map(fn transition ->
-             %{transition | executor: String.to_existing_atom(transition.executor)}
-           end)}
+          {:ok, repo.all(transition_query)}
       end
     end
   end

@@ -49,7 +49,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workflow do
         |> Map.merge(%{
           id: transition_rid_to_uuids[params.rid],
           workflow_id: workflow_id,
-          executor: to_string(params.executor),
+          executor: params.executor,
           inserted_at: inserted_at
         })
         |> Map.delete(:rid)
