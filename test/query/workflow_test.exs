@@ -52,7 +52,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.WorkflowTest do
 
       assert {:ok, workflow} = Workflow.fetch_workflow(@adapter_meta, workflow.id)
 
-      %{places: places, transitions: transitions, arcs: arcs} = workflow
+      %{places: places, transitions: transitions, arcs: arcs} = Workflow.preload(@adapter_meta, workflow.id)
 
       assert length(arcs) == 10
       assert length(transitions) == 5

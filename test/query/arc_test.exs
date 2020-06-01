@@ -19,7 +19,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.ArcTest do
 
   setup do
     {:ok, workflow} = Workflow.create_workflow(@adapter_meta, @params)
-    {:ok, workflow} = Workflow.fetch_workflow(@adapter_meta, workflow.id)
+    workflow = Workflow.preload(@adapter_meta, workflow.id)
     %{workflow: workflow, adapter_meta: @adapter_meta}
   end
 

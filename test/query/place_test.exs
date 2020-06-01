@@ -37,7 +37,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.PlaceTest do
 
   describe "fetch_places/3" do
     test "success", %{workflow: workflow, adapter_meta: adapter_meta} do
-      {:ok, %{transitions: [transition]}} = Workflow.fetch_workflow(adapter_meta, workflow.id)
+      %{transitions: [transition]} = Workflow.preload(adapter_meta, workflow.id)
       {:ok, {start_place, end_place}} = Place.fetch_edge_places(adapter_meta, workflow.id)
       assert {:ok, [fetch_start_place]} = Place.fetch_places(adapter_meta, transition.id, :in)
       assert fetch_start_place.id == start_place.id
@@ -54,7 +54,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.PlaceTest do
 
   describe "fetch_place/2" do
     test "success", %{workflow: workflow, adapter_meta: adapter_meta} do
-      {:ok, %{places: places}} = Workflow.fetch_workflow(adapter_meta, workflow.id)
+      %{places: places} = Workflow.preload(adapter_meta, workflow.id)
       place = hd(places)
       assert {:ok, new_place} = Place.fetch_place(adapter_meta, place.id)
       assert new_place.id == place.id

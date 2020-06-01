@@ -90,8 +90,14 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workflow do
         {:error, :workflow_not_found}
 
       workflow ->
-        {:ok, repo.preload(workflow, [:places, :transitions, :arcs])}
+        {:ok, workflow}
     end
+  end
+
+  def preload(adapter_meta, workflow_id, items \\ [:places, :transitions, :arcs]) do
+    repo = repo(adapter_meta)
+    query = from w in Workflow, where: w.id == ^workflow_id, preload: ^items
+    repo.one(query)
   end
 
   def delete_workflow(adapter_meta, workflow_id) do
