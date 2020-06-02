@@ -13,18 +13,15 @@ defmodule WorkflowMetalPostgresAdapter.Query.Helper do
   def reversed_arc_direction(:out), do: :in
 
   @spec uuid() :: Ecto.UUID.t()
-  def uuid do
-    generator_uuid = Ecto.UUID.generate()
-
-    if generator_uuid === @genesis_uuid do
-      uuid()
-    else
-      generator_uuid
-    end
-  end
+  def uuid, do: do_uuid()
 
   @spec now() :: NaiveDateTime.t()
   def now do
     NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
   end
+
+  def do_uuid(value \\ nil)
+  def do_uuid(nil), do: do_uuid(Ecto.UUID.generate())
+  def do_uuid(@genesis_uuid), do: do_uuid()
+  def do_uuid(uuid), do: uuid
 end
