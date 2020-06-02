@@ -35,9 +35,7 @@ defmodule WorkflowMetalPostgresAdapter.MixProject do
       {:jason, "~> 1.1"},
       {:postgrex, "~> 0.14"},
       {:ecto_enum, "~> 1.4"},
-      {:workflow_metal,
-       git: "git@github.com:Byzanteam/workflow_metal.git",
-       branch: "zhengjie/support/storage-config"}
+      {:workflow_metal, github: "Byzanteam/workflow_metal"}
     ]
   end
 
