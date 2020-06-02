@@ -5,16 +5,10 @@ defmodule WorkflowMetalPostgresAdapter.Migrations do
 
   @initial_version 1
   @current_version 1
-  @schema Application.get_env(:workflow_metal_postgres_adapter, WorkflowMetalPostgresAdapter)[
-            :schema
-          ] || "public"
-  @prefix Application.get_env(:workflow_metal_postgres_adapter, WorkflowMetalPostgresAdapter)[
-            :prefix
-          ] || "workflow"
 
   def up(opts \\ []) when is_list(opts) do
-    schema = @schema
-    prefix = @prefix
+    schema = repo_schema()
+    prefix = repo_prefix()
     version = Keyword.get(opts, :version, @current_version)
     initial = min(migrated_version(repo(), schema, prefix) + 1, @current_version)
 
@@ -22,8 +16,8 @@ defmodule WorkflowMetalPostgresAdapter.Migrations do
   end
 
   def down(opts \\ []) when is_list(opts) do
-    schema = @schema
-    prefix = @prefix
+    schema = repo_schema()
+    prefix = repo_prefix()
     version = Keyword.get(opts, :version, @initial_version)
     initial = max(migrated_version(repo(), schema, prefix), @initial_version)
 
@@ -56,5 +50,15 @@ defmodule WorkflowMetalPostgresAdapter.Migrations do
       |> Module.concat()
       |> apply(direction, [schema, prefix])
     end
+  end
+
+  defp repo_schema do
+    Application.get_env(:workflow_metal_postgres_adapter, WorkflowMetalPostgresAdapter)[:schema] ||
+      "public"
+  end
+
+  defp repo_prefix do
+    Application.get_env(:workflow_metal_postgres_adapter, WorkflowMetalPostgresAdapter)[:prefix] ||
+      "workflow"
   end
 end
