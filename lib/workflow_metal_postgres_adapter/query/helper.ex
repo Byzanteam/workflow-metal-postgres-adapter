@@ -14,12 +14,12 @@ defmodule WorkflowMetalPostgresAdapter.Query.Helper do
 
   @spec uuid() :: Ecto.UUID.t()
   def uuid do
-    uuid = Ecto.UUID.generate()
+    generator_uuid = Ecto.UUID.generate()
 
-    if uuid === @genesis_uuid do
+    if generator_uuid === @genesis_uuid do
       uuid()
     else
-      uuid
+      generator_uuid
     end
   end
 
