@@ -1,11 +1,34 @@
 # WorkflowMetalPostgresAdapter
 
-WorkflowMetalPostgresAdapter for Elixir project.
+Workflow Metal Postgres adapter.
 
-* Clone repo
-* Remove .git fold
-* Replace ModuleName `WorkflowMetalPostgresAdapter` to `NewProject` module name
-* Replace app name `workflow_metal_postgres_adapter` to `new_project` app name
+## Use
+
+* Add config for `schema` and `prefix`. Default are `public` and `workflow`
+
+```elixir
+config :workflow_metal_postgres_adapter, WorkflowMetalPostgresAdapter,
+  schema: "public",
+  prefix: "workflow"
+```
+
+* Use storage in Workflow Application, pass the application repo.
+
+```elixir
+  defmodule Workflow do
+    use WorkflowMetal.Application,
+      registry: WorkflowMetal.Registration.LocalRegistry,
+      storage: {WorkflowMetalPostgresAdapter, repo: TestWorkflow.Repo}
+  end
+```
+
+## Test in shell
+
+* Migrate repo first.
+
+```shell
+iex --dot-iex examples/traffic_light.exs -S mix
+```
 
 ## Installation
 
