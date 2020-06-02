@@ -1,7 +1,6 @@
 defmodule WorkflowMetalPostgresAdapter.Query.WorkflowTest do
   use WorkflowMetalPostgresAdapter.RepoCase
 
-  alias WorkflowMetalPostgresAdapter.Schema.{Arc, Place, Transition}
   alias WorkflowMetalPostgresAdapter.Query.Workflow
 
   @params %{
@@ -36,9 +35,8 @@ defmodule WorkflowMetalPostgresAdapter.Query.WorkflowTest do
   test "create workflows with places transitions and arcs" do
     assert {:ok, workflow} = Workflow.create_workflow(@adapter_meta, @params)
 
-    arcs = Repo.all(Arc)
-    transitions = Repo.all(Transition)
-    places = Repo.all(Place)
+    %{arcs: arcs, transitions: transitions, places: places} =
+      Workflow.preload(@adapter_meta, workflow.id)
 
     assert workflow.state == :active
     assert length(arcs) == 10
@@ -52,7 +50,8 @@ defmodule WorkflowMetalPostgresAdapter.Query.WorkflowTest do
 
       assert {:ok, workflow} = Workflow.fetch_workflow(@adapter_meta, workflow.id)
 
-      %{places: places, transitions: transitions, arcs: arcs} = Workflow.preload(@adapter_meta, workflow.id)
+      %{places: places, transitions: transitions, arcs: arcs} =
+        Workflow.preload(@adapter_meta, workflow.id)
 
       assert length(arcs) == 10
       assert length(transitions) == 5

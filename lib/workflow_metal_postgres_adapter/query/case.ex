@@ -16,14 +16,11 @@ defmodule WorkflowMetalPostgresAdapter.Query.Case do
 
       repo = repo(adapter_meta)
 
-      case repo.insert(workflow_case) do
-        {:ok, workflow_case} -> {:ok, Case.to_storage_schema(workflow_case)}
-        other -> other
-      end
+      repo.insert(workflow_case)
     end
   end
 
-  def fetch_case(adapter_meta, case_id, opts \\ []) do
+  def fetch_case(adapter_meta, case_id) do
     repo = repo(adapter_meta)
 
     case repo.get(Case, case_id) do
@@ -31,16 +28,12 @@ defmodule WorkflowMetalPostgresAdapter.Query.Case do
         {:error, :case_not_found}
 
       workflow_case ->
-        if Keyword.get(opts, :transform, true) do
-          {:ok, Case.to_storage_schema(workflow_case)}
-        else
-          {:ok, workflow_case}
-        end
+        {:ok, workflow_case}
     end
   end
 
   def update_case(adapter_meta, case_id, update_case_params) do
-    with {:ok, workflow_case} <- fetch_case(adapter_meta, case_id, transform: false) do
+    with {:ok, workflow_case} <- fetch_case(adapter_meta, case_id) do
       repo = repo(adapter_meta)
       try_update_case(repo, workflow_case, update_case_params)
     end
@@ -71,9 +64,5 @@ defmodule WorkflowMetalPostgresAdapter.Query.Case do
     workflow_case
     |> Ecto.Changeset.change(%{state: state})
     |> repo.update()
-    |> case do
-      {:ok, workflow_case} -> {:ok, Case.to_storage_schema(workflow_case)}
-      other -> other
-    end
   end
 end

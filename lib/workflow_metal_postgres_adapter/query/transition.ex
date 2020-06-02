@@ -13,7 +13,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Transition do
         {:error, :transition_not_found}
 
       transition ->
-        {:ok, Transition.to_storage_schema(transition)}
+        {:ok, transition}
     end
   end
 
@@ -35,7 +35,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Transition do
         transition_ids ->
           transition_query = from t in Transition, where: t.id in ^transition_ids
 
-          {:ok, repo.all(transition_query) |> Enum.map(& Transition.to_storage_schema(&1))}
+          {:ok, repo.all(transition_query)}
       end
     end
   end

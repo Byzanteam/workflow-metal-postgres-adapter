@@ -40,10 +40,6 @@ defmodule WorkflowMetalPostgresAdapter.Query.Token do
       %Token{}
       |> Token.changeset(params)
       |> repo.insert()
-      |> case do
-        {:ok, token} -> {:ok, Token.to_storage_schema(token)}
-        other -> other
-      end
     end
   end
 
@@ -120,7 +116,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Token do
         end
 
       tokens = repo(adapter_meta).all(query)
-      {:ok, Enum.map(tokens, & Token.to_storage_schema(&1))}
+      {:ok, tokens}
     end
   end
 
@@ -142,13 +138,13 @@ defmodule WorkflowMetalPostgresAdapter.Query.Token do
   defp do_lock_tokens(tokens, task, repo) do
     query = from t in Token, where: t.id in ^Enum.map(tokens, & &1.id)
     repo.update_all(query, set: [state: :locked, locked_by_task_id: task.id, updated_at: now()])
-    {:ok, repo.all(query) |> Enum.map(& Token.to_storage_schema(&1))}
+    {:ok, repo.all(query)}
   end
 
   defp do_unlock_tokens(tokens, repo) do
     query = from t in Token, where: t.id in ^Enum.map(tokens, & &1.id)
     repo.update_all(query, set: [state: :free, locked_by_task_id: nil, updated_at: now()])
-    {:ok, repo.all(query) |> Enum.map(& Token.to_storage_schema(&1))}
+    {:ok, repo.all(query)}
   end
 
   defp do_consume_tokens(tokens, repo, task_id \\ nil) do
@@ -158,6 +154,6 @@ defmodule WorkflowMetalPostgresAdapter.Query.Token do
       set: [state: :consumed, updated_at: now(), consumed_by_task_id: task_id]
     )
 
-    {:ok, repo.all(query) |> Enum.map(& Token.to_storage_schema(&1))}
+    {:ok, repo.all(query)}
   end
 end

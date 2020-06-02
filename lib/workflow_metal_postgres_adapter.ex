@@ -3,6 +3,8 @@ defmodule WorkflowMetalPostgresAdapter do
   Documentation for WorkflowMetalPostgresAdapter.
   """
 
+  import WorkflowMetalPostgresAdapter.Utilities
+
   alias WorkflowMetalPostgresAdapter.Query.{
     Workflow,
     Place,
@@ -19,35 +21,28 @@ defmodule WorkflowMetalPostgresAdapter do
     {:ok, nil, [repo: repo]}
   end
 
-  defdelegate create_workflow(adapter_meta, workflow_params), to: Workflow
-  defdelegate fetch_workflow(adapter_meta, workflow_id), to: Workflow
-  defdelegate delete_workflow(adapter_meta, workflow_id), to: Workflow
+  interface Workflow, create_workflow: 2, fetch_workflow: 2, delete_workflow: 2
 
-  defdelegate fetch_edge_places(adapter_meta, workflow_id), to: Place
-  defdelegate fetch_places(adapter_meta, transition_id, arc_direction), to: Place
+  interface Place, fetch_edge_places: 2, fetch_places: 3
 
-  defdelegate fetch_transition(adapter_meta, transition_id), to: Transition
-  defdelegate fetch_transitions(adapter_meta, place_id, arc_direction), to: Transition
+  interface Transition, fetch_transition: 2, fetch_transitions: 3
 
-  defdelegate fetch_arcs(adapter_meta, arc_beginning, arc_direction), to: Arc
+  interface Arc, fetch_arcs: 3
 
-  defdelegate create_case(adapter_meta, case_params), to: Case
-  defdelegate fetch_case(adapter_meta, case_id), to: Case
-  defdelegate update_case(adapter_meta, case_id, update_case_params), to: Case
+  interface Case, create_case: 2, fetch_case: 2, update_case: 3
 
-  defdelegate create_task(adapter_meta, task_params), to: Task
-  defdelegate fetch_task(adapter_meta, task_id), to: Task
-  defdelegate fetch_tasks(adapter_meta, case_id, fetch_tasks_options), to: Task
-  defdelegate update_task(adapter_meta, task_id, update_task_params), to: Task
+  interface Task, create_task: 2, fetch_task: 2, fetch_tasks: 3, update_task: 3
 
-  defdelegate issue_token(adapter_meta, token_params), to: Token
-  defdelegate lock_tokens(adapter_meta, token_ids, locked_by_task_id), to: Token
-  defdelegate unlock_tokens(adapter_meta, locked_by_task_id), to: Token
-  defdelegate consume_tokens(adapter_meta, locked_by_task_id), to: Token
-  defdelegate fetch_tokens(adapter_meta, case_id, fetch_tokens_options), to: Token
+  interface Token,
+    issue_token: 2,
+    lock_tokens: 3,
+    unlock_tokens: 2,
+    consume_tokens: 2,
+    fetch_tokens: 3
 
-  defdelegate create_workitem(adapter_meta, workitem_params), to: Workitem
-  defdelegate fetch_workitem(adapter_meta, workitem_id), to: Workitem
-  defdelegate fetch_workitems(adapter_meta, task_id), to: Workitem
-  defdelegate update_workitem(adapter_meta, workitem_id, update_workitem_params), to: Workitem
+  interface Workitem,
+    create_workitem: 2,
+    fetch_workitem: 2,
+    fetch_workitems: 2,
+    update_workitem: 3
 end
