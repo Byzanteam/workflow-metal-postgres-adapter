@@ -11,7 +11,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Place do
       start_place = repo.get_by(Place, workflow_id: workflow.id, type: :start)
       end_place = repo.get_by(Place, workflow_id: workflow.id, type: :end)
 
-      {:ok, {start_place, end_place}}
+      {:ok, {Place.to_storage_schema(start_place), Place.to_storage_schema(end_place)}}
     end
   end
 
@@ -35,7 +35,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Place do
         place_ids ->
           place_query = from p in Place, where: p.id in ^place_ids
 
-          {:ok, repo.all(place_query)}
+          {:ok, repo.all(place_query) |> Enum.map(& Place.to_storage_schema(&1))}
       end
     end
   end
@@ -45,7 +45,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Place do
 
     case repo.get(Place, place_id) do
       nil -> {:error, :place_not_found}
-      place -> {:ok, place}
+      place -> {:ok, Place.to_storage_schema(place)}
     end
   end
 end

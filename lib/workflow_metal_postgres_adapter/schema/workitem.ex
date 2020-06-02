@@ -2,6 +2,8 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Workitem do
   @moduledoc false
   use WorkflowMetalPostgresAdapter.Schema
 
+  alias WorkflowMetal.Storage.Schema.Workitem
+
   import EctoEnum
 
   defenum(
@@ -39,5 +41,17 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Workitem do
   def changeset(workitem, params) do
     workitem
     |> cast(params, @permit_fields)
+  end
+
+  def to_storage_schema(workitem) do
+    %Workitem{
+      id: workitem.id,
+      workflow_id: workitem.workflow_id,
+      transition_id: workitem.transition_id,
+      case_id: workitem.case_id,
+      task_id: workitem.task_id,
+      output: workitem.output,
+      state: workitem.state
+    }
   end
 end

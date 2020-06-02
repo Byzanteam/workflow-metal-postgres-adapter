@@ -5,6 +5,8 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Token do
   """
   use WorkflowMetalPostgresAdapter.Schema
 
+  alias WorkflowMetal.Storage.Schema.Token
+
   import EctoEnum
 
   defenum(StateType, :"#{@prefix}_token_state", [:free, :locked, :consumed], schema: @schema)
@@ -51,5 +53,19 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Token do
     token
     |> cast(params, @permit_fields)
     |> validate_required(@require_fields)
+  end
+
+  def to_storage_schema(token) do
+    %Token{
+      id: token.id,
+      workflow_id: token.workflow_id,
+      case_id: token.case_id,
+      place_id: token.place_id,
+      produced_by_task_id: token.produced_by_task_id,
+      locked_by_task_id: token.locked_by_task_id,
+      consumed_by_task_id: token.consumed_by_task_id,
+      payload: token.payload,
+      state: token.state
+    }
   end
 end

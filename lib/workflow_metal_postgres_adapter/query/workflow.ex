@@ -77,7 +77,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workflow do
     |> Multi.insert_all(:arcs, Arc, arc_params)
     |> repo.transaction()
     |> case do
-      {:ok, %{workflow: workflow}} -> {:ok, workflow}
+      {:ok, %{workflow: workflow}} -> {:ok, Workflow.to_storage_schema(workflow)}
       error -> error
     end
   end
@@ -90,7 +90,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workflow do
         {:error, :workflow_not_found}
 
       workflow ->
-        {:ok, workflow}
+        {:ok, Workflow.to_storage_schema(workflow)}
     end
   end
 

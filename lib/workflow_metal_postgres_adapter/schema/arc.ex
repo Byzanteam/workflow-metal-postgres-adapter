@@ -24,6 +24,8 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Arc do
   """
   use WorkflowMetalPostgresAdapter.Schema
 
+  alias WorkflowMetal.Storage.Schema.Arc
+
   import EctoEnum
 
   defenum(DirectionType, :"#{@prefix}_arc_direction", [:in, :out], schema: @schema)
@@ -35,5 +37,15 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Arc do
     field :direction, DirectionType
 
     timestamps(updated_at: false)
+  end
+
+  def to_storage_schema(arc) do
+    %Arc{
+      id: arc.id,
+      workflow_id: arc.workflow_id,
+      transition_id: arc.transition_id,
+      place_id: arc.place_id,
+      direction: arc.direction
+    }
   end
 end

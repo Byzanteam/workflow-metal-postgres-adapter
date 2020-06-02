@@ -25,16 +25,26 @@ defmodule WorkflowMetalPostgresAdapter.Query.Task do
 
       repo = repo(adapter_meta)
 
-      repo.insert(Task.changeset(%Task{}, params))
+      case repo.insert(Task.changeset(%Task{}, params)) do
+        {:ok, task} -> {:ok, Task.to_storage_schema(task)}
+        other -> other
+      end
     end
   end
 
-  def fetch_task(adapter_meta, task_id) when is_binary(task_id) do
+  def fetch_task(adapter_meta, task_id, opts \\ []) do
     repo = repo(adapter_meta)
 
     case repo.get(Task, task_id) do
-      nil -> {:error, :task_not_found}
-      task -> {:ok, task}
+      nil ->
+        {:error, :task_not_found}
+
+      task ->
+        if Keyword.get(opts, :transform, true) do
+          {:ok, Task.to_storage_schema(task)}
+        else
+          {:ok, task}
+        end
     end
   end
 
@@ -54,12 +64,12 @@ defmodule WorkflowMetalPostgresAdapter.Query.Task do
 
       tasks = repo(adapter_meta).all(query)
 
-      {:ok, tasks}
+      {:ok, Enum.map(tasks, &Task.to_storage_schema(&1))}
     end
   end
 
   def update_task(adapter_meta, task_id, update_task_params) do
-    with {:ok, task} <- fetch_task(adapter_meta, task_id) do
+    with {:ok, task} <- fetch_task(adapter_meta, task_id, transform: false) do
       repo = repo(adapter_meta)
 
       try_update_task(repo, task, update_task_params)
@@ -99,5 +109,9 @@ defmodule WorkflowMetalPostgresAdapter.Query.Task do
     task
     |> Ecto.Changeset.change(params)
     |> repo.update()
+    |> case do
+      {:ok, task} -> {:ok, Task.to_storage_schema(task)}
+      other -> other
+    end
   end
 end

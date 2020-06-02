@@ -2,6 +2,8 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Task do
   @moduledoc false
   use WorkflowMetalPostgresAdapter.Schema
 
+  alias WorkflowMetal.Storage.Schema.Task
+
   import EctoEnum
 
   defenum(
@@ -38,9 +40,24 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Task do
     :state
   ]
 
+  def changeset(task, params) when is_struct(params) do
+    changeset(task, Map.from_struct(params))
+  end
+
   def changeset(task, params) do
     task
     |> cast(params, @permit_fields)
     |> validate_required(@required_fields)
+  end
+
+  def to_storage_schema(task) do
+    %Task{
+      id: task.id,
+      workflow_id: task.workflow_id,
+      transition_id: task.transition_id,
+      case_id: task.case_id,
+      state: task.state,
+      token_payload: task.token_payload
+    }
   end
 end

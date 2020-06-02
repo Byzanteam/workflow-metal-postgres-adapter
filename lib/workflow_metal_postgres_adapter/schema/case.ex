@@ -8,6 +8,8 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Case do
   """
   use WorkflowMetalPostgresAdapter.Schema
 
+  alias WorkflowMetal.Storage.Schema.Case
+
   import EctoEnum
 
   defenum(StateType, :"#{@prefix}_case_state_type", [:created, :active, :canceled, :finished],
@@ -19,5 +21,13 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Case do
     field :state, StateType
 
     timestamps()
+  end
+
+  def to_storage_schema(case) do
+    %Case{
+      id: case.id,
+      workflow_id: case.workflow_id,
+      state: case.state
+    }
   end
 end

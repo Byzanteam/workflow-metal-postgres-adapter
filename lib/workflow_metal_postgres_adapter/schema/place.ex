@@ -13,6 +13,8 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Place do
 
   use WorkflowMetalPostgresAdapter.Schema
 
+  alias WorkflowMetal.Storage.Schema.Place
+
   import EctoEnum
 
   defenum(TypeEnum, :"#{@prefix}_place_type", [:start, :normal, :end], schema: @schema)
@@ -22,5 +24,13 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Place do
     field :type, TypeEnum
 
     timestamps(updated_at: false)
+  end
+
+  def to_storage_schema(place) do
+    %Place{
+      id: place.id,
+      workflow_id: place.workflow_id,
+      type: place.type
+    }
   end
 end

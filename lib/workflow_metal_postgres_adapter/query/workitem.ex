@@ -31,18 +31,29 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workitem do
       %Workitem{}
       |> Workitem.changeset(params)
       |> repo.insert()
+      |> case do
+        {:ok, workitem} -> {:ok, Workitem.to_storage_schema(workitem)}
+        other -> other
+      end
     end
   end
 
   @doc """
   Fetch a workitem of a task.
   """
-  def fetch_workitem(adapter_meta, workitem_id) do
+  def fetch_workitem(adapter_meta, workitem_id, opts \\ []) do
     repo = repo(adapter_meta)
 
     case repo.get(Workitem, workitem_id) do
-      nil -> {:error, :workitem_not_found}
-      workitem -> {:ok, workitem}
+      nil ->
+        {:error, :workitem_not_found}
+
+      workitem ->
+        if Keyword.get(opts, :transform, true) do
+          {:ok, Workitem.to_storage_schema(workitem)}
+        else
+          {:ok, workitem}
+        end
     end
   end
 
@@ -57,7 +68,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workitem do
           where: w.workflow_id == ^task.workflow_id
 
       repo = repo(adapter_meta)
-      {:ok, repo.all(query)}
+      {:ok, repo.all(query) |> Enum.map(&Workitem.to_storage_schema(&1))}
     end
   end
 
@@ -73,7 +84,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workitem do
   it returns `{:ok, workitem_schema}` too.
   """
   def update_workitem(adapter_meta, workitem_id, update_workitem_params) do
-    with {:ok, workitem} <- fetch_workitem(adapter_meta, workitem_id) do
+    with {:ok, workitem} <- fetch_workitem(adapter_meta, workitem_id, transform: false) do
       repo = repo(adapter_meta)
       try_update_workitem(repo, workitem, update_workitem_params)
     end
@@ -109,5 +120,9 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workitem do
     workitem
     |> Ecto.Changeset.change(params)
     |> repo.update()
+    |> case do
+      {:ok, workitem} -> {:ok, Workitem.to_storage_schema(workitem)}
+      other -> other
+    end
   end
 end
