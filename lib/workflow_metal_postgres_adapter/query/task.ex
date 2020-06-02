@@ -17,7 +17,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Task do
          {:ok, workflow_case} <- Case.fetch_case(adapter_meta, case_id) do
       params =
         Map.merge(task_params, %{
-          id: Ecto.UUID.generate(),
+          id: uuid(),
           workflow_id: workflow.id,
           transition_id: transition.id,
           case_id: workflow_case.id

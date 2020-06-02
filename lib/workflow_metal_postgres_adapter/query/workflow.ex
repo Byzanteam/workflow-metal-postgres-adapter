@@ -9,7 +9,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workflow do
   def create_workflow(adapter_meta, workflow_params) do
     repo = repo(adapter_meta)
 
-    workflow_id = Ecto.UUID.generate()
+    workflow_id = uuid()
     inserted_at = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
 
     %{
@@ -20,12 +20,12 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workflow do
 
     places_rid_to_uuids =
       for place <- places, into: %{} do
-        {place.rid, Ecto.UUID.generate()}
+        {place.rid, uuid()}
       end
 
     transition_rid_to_uuids =
       for transition <- transitions, into: %{} do
-        {transition.rid, Ecto.UUID.generate()}
+        {transition.rid, uuid()}
       end
 
     place_params =
@@ -61,7 +61,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workflow do
 
         params
         |> Map.merge(%{
-          id: Ecto.UUID.generate(),
+          id: uuid(),
           place_id: places_rid_to_uuids[params.place_rid],
           transition_id: transition_rid_to_uuids[params.transition_rid],
           workflow_id: workflow_id,

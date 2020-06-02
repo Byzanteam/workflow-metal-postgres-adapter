@@ -9,7 +9,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Case do
 
     with {:ok, workflow} <- Workflow.fetch_workflow(adapter_meta, workflow_id) do
       workflow_case = %Case{
-        id: Ecto.UUID.generate(),
+        id: uuid(),
         workflow_id: workflow.id,
         state: :created
       }
@@ -31,7 +31,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Case do
         {:error, :case_not_found}
 
       workflow_case ->
-        if Keyword.get(opts, :transform,  true) do
+        if Keyword.get(opts, :transform, true) do
           {:ok, Case.to_storage_schema(workflow_case)}
         else
           {:ok, workflow_case}
