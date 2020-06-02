@@ -119,6 +119,10 @@ jobs:
       with:
         elixir-version: ${{ env.ELIXIR_VERSION }}
         otp-version: ${{ env.OTP_VERSION }}
+
+    - name: Install Dependencies
+      run: mix deps.get
+
     - name: Format
       run: mix format --check-formatted
 
