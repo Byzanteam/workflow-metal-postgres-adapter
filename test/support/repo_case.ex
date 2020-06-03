@@ -1,4 +1,5 @@
 defmodule WorkflowMetalPostgresAdapter.RepoCase do
+  @moduledoc false
   use ExUnit.CaseTemplate
 
   using do
@@ -17,10 +18,12 @@ defmodule WorkflowMetalPostgresAdapter.RepoCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(WorkflowMetalPostgresAdapter.Repo)
+    alias WorkflowMetalPostgresAdapter.Repo
+    alias Ecto.Adapters.SQL.Sandbox
+    :ok = Sandbox.checkout(Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(WorkflowMetalPostgresAdapter.Repo, {:shared, self()})
+      Sandbox.mode(Repo, {:shared, self()})
     end
 
     :ok

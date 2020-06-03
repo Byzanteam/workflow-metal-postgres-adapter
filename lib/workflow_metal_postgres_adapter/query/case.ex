@@ -1,4 +1,5 @@
 defmodule WorkflowMetalPostgresAdapter.Query.Case do
+  @moduledoc false
   import WorkflowMetalPostgresAdapter.Query.Helper
 
   alias WorkflowMetalPostgresAdapter.Schema.Case

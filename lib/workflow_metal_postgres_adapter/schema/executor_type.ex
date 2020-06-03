@@ -1,4 +1,8 @@
 defmodule WorkflowMetalPostgresAdapter.Schema.ExecutorType do
+  @moduledoc """
+  Custom ecto type for executor.
+  Store :atom use string in database, query back to atom.
+  """
   use Ecto.Type
 
   def type, do: :string

@@ -1,4 +1,5 @@
 defmodule WorkflowMetalPostgresAdapter.Utilities do
+  @moduledoc false
   defmacro interface(module, name_arities) do
     quote bind_quoted: [module: module, name_arities: name_arities] do
       for {name, arity} <- name_arities do

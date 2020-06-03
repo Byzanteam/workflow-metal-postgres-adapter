@@ -1,4 +1,5 @@
 defmodule WorkflowMetalPostgresAdapter.Query.Workitem do
+  @moduledoc false
   import WorkflowMetalPostgresAdapter.Query.Helper
   import Ecto.Query
 
