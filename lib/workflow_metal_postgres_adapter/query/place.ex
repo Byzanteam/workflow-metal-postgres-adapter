@@ -8,8 +8,12 @@ defmodule WorkflowMetalPostgresAdapter.Query.Place do
   def fetch_edge_places(adapter_meta, workflow_id) do
     with {:ok, workflow} <- Workflow.fetch_workflow(adapter_meta, workflow_id) do
       repo = repo(adapter_meta)
-      start_place = repo.get_by(Place, workflow_id: workflow.id, type: :start)
-      end_place = repo.get_by(Place, workflow_id: workflow.id, type: :end)
+
+      start_place =
+        repo.get_by(Place, [workflow_id: workflow.id, type: :start], prefix: repo_schema())
+
+      end_place =
+        repo.get_by(Place, [workflow_id: workflow.id, type: :end], prefix: repo_schema())
 
       {:ok, {start_place, end_place}}
     end
@@ -28,14 +32,14 @@ defmodule WorkflowMetalPostgresAdapter.Query.Place do
 
       repo = repo(adapter_meta)
 
-      case repo.all(arc_query) do
+      case repo.all(arc_query, prefix: repo_schema()) do
         [] ->
           {:ok, []}
 
         place_ids ->
           place_query = from p in Place, where: p.id in ^place_ids
 
-          {:ok, repo.all(place_query)}
+          {:ok, repo.all(place_query, prefix: repo_schema())}
       end
     end
   end
@@ -43,7 +47,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Place do
   def fetch_place(adapter_meta, place_id) do
     repo = repo(adapter_meta)
 
-    case repo.get(Place, place_id) do
+    case repo.get(Place, place_id, prefix: repo_schema()) do
       nil -> {:error, :place_not_found}
       place -> {:ok, place}
     end

@@ -30,7 +30,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workitem do
 
       %Workitem{}
       |> Workitem.changeset(params)
-      |> repo.insert()
+      |> repo.insert(prefix: repo_schema())
     end
   end
 
@@ -40,7 +40,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workitem do
   def fetch_workitem(adapter_meta, workitem_id) do
     repo = repo(adapter_meta)
 
-    case repo.get(Workitem, workitem_id) do
+    case repo.get(Workitem, workitem_id, prefix: repo_schema()) do
       nil ->
         {:error, :workitem_not_found}
 
@@ -60,7 +60,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workitem do
           where: w.workflow_id == ^task.workflow_id
 
       repo = repo(adapter_meta)
-      {:ok, repo.all(query)}
+      {:ok, repo.all(query, prefix: repo_schema())}
     end
   end
 
@@ -111,6 +111,6 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workitem do
   defp do_update_workitem(repo, workitem, params) do
     workitem
     |> Ecto.Changeset.change(params)
-    |> repo.update()
+    |> repo.update(prefix: repo_schema())
   end
 end

@@ -24,4 +24,9 @@ defmodule WorkflowMetalPostgresAdapter.Query.Helper do
   def do_uuid(nil), do: do_uuid(Ecto.UUID.generate())
   def do_uuid(@genesis_uuid), do: do_uuid()
   def do_uuid(uuid), do: uuid
+
+  def repo_schema do
+    Application.get_env(:workflow_metal_postgres_adapter, WorkflowMetalPostgresAdapter)[:schema] ||
+      "public"
+  end
 end

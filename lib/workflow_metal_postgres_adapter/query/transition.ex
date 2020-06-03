@@ -8,7 +8,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Transition do
   def fetch_transition(adapter_meta, transition_id) do
     repo = repo(adapter_meta)
 
-    case repo.get(Transition, transition_id) do
+    case repo.get(Transition, transition_id, prefix: repo_schema()) do
       nil ->
         {:error, :transition_not_found}
 
@@ -28,14 +28,14 @@ defmodule WorkflowMetalPostgresAdapter.Query.Transition do
 
       repo = repo(adapter_meta)
 
-      case repo.all(query) do
+      case repo.all(query, prefix: repo_schema()) do
         [] ->
           {:ok, []}
 
         transition_ids ->
           transition_query = from t in Transition, where: t.id in ^transition_ids
 
-          {:ok, repo.all(transition_query)}
+          {:ok, repo.all(transition_query, prefix: repo_schema())}
       end
     end
   end

@@ -24,14 +24,14 @@ defmodule WorkflowMetalPostgresAdapter.Query.Task do
         })
 
       repo = repo(adapter_meta)
-      repo.insert(Task.changeset(%Task{}, params))
+      repo.insert(Task.changeset(%Task{}, params), prefix: repo_schema())
     end
   end
 
   def fetch_task(adapter_meta, task_id) do
     repo = repo(adapter_meta)
 
-    case repo.get(Task, task_id) do
+    case repo.get(Task, task_id, prefix: repo_schema()) do
       nil ->
         {:error, :task_not_found}
 
@@ -54,7 +54,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Task do
           base_query
         end
 
-      tasks = repo(adapter_meta).all(query)
+      tasks = repo(adapter_meta).all(query, prefix: repo_schema())
 
       {:ok, tasks}
     end
@@ -100,6 +100,6 @@ defmodule WorkflowMetalPostgresAdapter.Query.Task do
   defp do_update_task(repo, task, params) do
     task
     |> Ecto.Changeset.change(params)
-    |> repo.update()
+    |> repo.update(prefix: repo_schema())
   end
 end

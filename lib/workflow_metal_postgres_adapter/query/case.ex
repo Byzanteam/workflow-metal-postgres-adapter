@@ -16,14 +16,14 @@ defmodule WorkflowMetalPostgresAdapter.Query.Case do
 
       repo = repo(adapter_meta)
 
-      repo.insert(workflow_case)
+      repo.insert(workflow_case, prefix: repo_schema())
     end
   end
 
   def fetch_case(adapter_meta, case_id) do
     repo = repo(adapter_meta)
 
-    case repo.get(Case, case_id) do
+    case repo.get(Case, case_id, prefix: repo_schema()) do
       nil ->
         {:error, :case_not_found}
 
@@ -63,6 +63,6 @@ defmodule WorkflowMetalPostgresAdapter.Query.Case do
   defp do_update_case(repo, workflow_case, state) do
     workflow_case
     |> Ecto.Changeset.change(%{state: state})
-    |> repo.update()
+    |> repo.update(prefix: repo_schema())
   end
 end

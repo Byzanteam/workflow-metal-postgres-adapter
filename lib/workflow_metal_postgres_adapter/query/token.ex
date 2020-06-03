@@ -39,7 +39,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Token do
 
       %Token{}
       |> Token.changeset(params)
-      |> repo.insert()
+      |> repo.insert(prefix: repo_schema())
     end
   end
 
@@ -66,7 +66,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Token do
           where: t.case_id == ^task.case_id
 
       repo = repo(adapter_meta)
-      tokens = repo.all(tokens_query)
+      tokens = repo.all(tokens_query, prefix: repo_schema())
       do_unlock_tokens(tokens, repo)
     end
   end
@@ -79,7 +79,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Token do
          {:ok, tokens} <- fetch_tokens(adapter_meta, case.id, states: [:free]) do
       tokens_query = from t in Token, where: t.id in ^Enum.map(tokens, & &1.id)
       repo = repo(adapter_meta)
-      tokens = repo.all(tokens_query)
+      tokens = repo.all(tokens_query, prefix: repo_schema())
       do_consume_tokens(tokens, repo)
     end
   end
@@ -93,7 +93,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Token do
           where: t.case_id == ^task.case_id
 
       repo = repo(adapter_meta)
-      tokens = repo.all(tokens_query)
+      tokens = repo.all(tokens_query, prefix: repo_schema())
       do_consume_tokens(tokens, repo, task.id)
     end
   end
@@ -115,7 +115,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Token do
           base_query
         end
 
-      tokens = repo(adapter_meta).all(query)
+      tokens = repo(adapter_meta).all(query, prefix: repo_schema())
       {:ok, tokens}
     end
   end
@@ -126,7 +126,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Token do
   defp prepare_lock_tokens(adapter_meta, token_ids) do
     query = from t in Token, where: t.id in ^token_ids, where: t.state == ^:free
     repo = repo(adapter_meta)
-    tokens = repo.all(query)
+    tokens = repo.all(query, prefix: repo_schema())
 
     if length(tokens) === length(token_ids) do
       {:ok, tokens}
@@ -137,21 +137,31 @@ defmodule WorkflowMetalPostgresAdapter.Query.Token do
 
   defp do_lock_tokens(tokens, task, repo) do
     query = from t in Token, where: t.id in ^Enum.map(tokens, & &1.id)
-    repo.update_all(query, set: [state: :locked, locked_by_task_id: task.id, updated_at: now()])
-    {:ok, repo.all(query)}
+
+    repo.update_all(query, [set: [state: :locked, locked_by_task_id: task.id, updated_at: now()]],
+      prefix: repo_schema()
+    )
+
+    {:ok, repo.all(query, prefix: repo_schema())}
   end
 
   defp do_unlock_tokens(tokens, repo) do
     query = from t in Token, where: t.id in ^Enum.map(tokens, & &1.id)
-    repo.update_all(query, set: [state: :free, locked_by_task_id: nil, updated_at: now()])
+
+    repo.update_all(query, [set: [state: :free, locked_by_task_id: nil, updated_at: now()]],
+      prefix: repo_schema()
+    )
+
     {:ok, repo.all(query)}
   end
 
   defp do_consume_tokens(tokens, repo, task_id \\ nil) do
     query = from t in Token, where: t.id in ^Enum.map(tokens, & &1.id)
 
-    repo.update_all(query,
-      set: [state: :consumed, updated_at: now(), consumed_by_task_id: task_id]
+    repo.update_all(
+      query,
+      [set: [state: :consumed, updated_at: now(), consumed_by_task_id: task_id]],
+      prefix: repo_schema()
     )
 
     {:ok, repo.all(query)}

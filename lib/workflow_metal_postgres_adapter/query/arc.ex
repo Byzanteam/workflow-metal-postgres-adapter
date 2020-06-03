@@ -12,12 +12,12 @@ defmodule WorkflowMetalPostgresAdapter.Query.Arc do
         where: a.direction == ^reversed_arc_direction(arc_direction)
 
     repo = repo(adapter_meta)
-    {:ok, repo.all(query)}
+    {:ok, repo.all(query, prefix: repo_schema())}
   end
 
   def fetch_arcs(adapter_meta, {:place, place_id}, arc_direction) do
     query = from a in Arc, where: a.place_id == ^place_id, where: a.direction == ^arc_direction
     repo = repo(adapter_meta)
-    {:ok, repo.all(query)}
+    {:ok, repo.all(query, prefix: repo_schema())}
   end
 end
