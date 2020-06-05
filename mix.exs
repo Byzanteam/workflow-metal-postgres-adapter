@@ -29,7 +29,13 @@ defmodule WorkflowMetalPostgresAdapter.MixProject do
     [
       {:credo, "~> 1.2", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0.0-rc.7", only: [:dev], runtime: false},
-      {:doctor, "~> 0.12.0", only: [:dev]}
+      {:doctor, "~> 0.12.0", only: [:dev]},
+      {:ecto, "~> 3.1"},
+      {:ecto_sql, "~> 3.1"},
+      {:jason, "~> 1.1"},
+      {:postgrex, "~> 0.14"},
+      {:ecto_enum, "~> 1.4"},
+      {:workflow_metal, github: "Byzanteam/workflow_metal", branch: "develop"}
     ]
   end
 
@@ -44,7 +50,8 @@ defmodule WorkflowMetalPostgresAdapter.MixProject do
 
   defp aliases do
     [
-      "code.check": ["format --check-formatted", "doctor --summary", "credo --strict", "dialyzer"]
+      "code.check": ["format --check-formatted", "doctor --summary", "credo --strict", "dialyzer"],
+      test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
 end
