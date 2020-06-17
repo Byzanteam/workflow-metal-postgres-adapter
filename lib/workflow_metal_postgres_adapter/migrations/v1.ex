@@ -34,6 +34,7 @@ defmodule WorkflowMetalPostgresAdapter.Migrations.V1 do
     create_if_not_exists table("#{prefix}_workflows", primary_key: false) do
       add :id, :uuid, primary_key: true
       add :state, Workflow.StateEnum.type()
+      add :metadata, :jsonb
 
       timestamps(updated_at: false)
     end
@@ -42,6 +43,7 @@ defmodule WorkflowMetalPostgresAdapter.Migrations.V1 do
       add :id, :uuid, primary_key: true
       add :workflow_id, :uuid
       add :type, Place.TypeEnum.type()
+      add :metadata, :jsonb
 
       timestamps(updated_at: false)
     end
@@ -55,6 +57,7 @@ defmodule WorkflowMetalPostgresAdapter.Migrations.V1 do
       add :split_type, Transition.SplitType.type()
       add :executor, :string
       add :executor_params, :map
+      add :metadata, :jsonb
 
       timestamps(updated_at: false)
     end
@@ -67,6 +70,7 @@ defmodule WorkflowMetalPostgresAdapter.Migrations.V1 do
       add :place_id, :uuid
       add :transition_id, :uuid
       add :direction, Arc.DirectionType.type()
+      add :metadata, :jsonb
 
       timestamps(updated_at: false)
     end
