@@ -35,6 +35,7 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Arc do
     field :transition_id, Ecto.UUID
     field :place_id, Ecto.UUID
     field :direction, DirectionType
+    field :metadata, :map
 
     timestamps(updated_at: false)
   end
@@ -45,7 +46,8 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Arc do
       workflow_id: arc.workflow_id,
       transition_id: arc.transition_id,
       place_id: arc.place_id,
-      direction: arc.direction
+      direction: arc.direction,
+      metadata: arc.metadata
     }
   end
 end
