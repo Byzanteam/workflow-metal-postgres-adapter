@@ -18,6 +18,7 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Transition do
     field :split_type, SplitType
     field :executor, ExecutorType
     field :executor_params, :map
+    field :metadata, :map
 
     timestamps(updated_at: false)
   end
@@ -29,7 +30,8 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Transition do
       join_type: transition.join_type,
       split_type: transition.split_type,
       executor: transition.executor,
-      executor_params: transition.executor_params
+      executor_params: transition.executor_params,
+      metadata: transition.metadata
     }
   end
 end

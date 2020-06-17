@@ -22,6 +22,7 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Place do
   schema "#{@prefix}_places" do
     field :workflow_id, Ecto.UUID
     field :type, TypeEnum
+    field :metadata, :map
 
     timestamps(updated_at: false)
   end
@@ -30,7 +31,8 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Place do
     %Place{
       id: place.id,
       workflow_id: place.workflow_id,
-      type: place.type
+      type: place.type,
+      metadata: place.metadata
     }
   end
 end

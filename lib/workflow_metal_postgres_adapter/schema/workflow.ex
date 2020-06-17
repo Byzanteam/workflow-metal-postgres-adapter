@@ -17,13 +17,16 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Workflow do
     has_many :transitions, Transition
     has_many :arcs, Arc
 
+    field :metadata, :map
+
     timestamps(updated_at: false)
   end
 
   def to_storage_schema(workflow) do
     %Workflow{
       id: workflow.id,
-      state: workflow.state
+      state: workflow.state,
+      metadata: workflow.metadata
     }
   end
 end
