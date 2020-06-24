@@ -82,6 +82,7 @@ defmodule WorkflowMetalPostgresAdapter.Migrations.V1 do
     create_if_not_exists table("#{prefix}_cases", primary_key: false) do
       add :id, :uuid, primary_key: true
       add :workflow_id, :uuid
+      add :data, :map
       add :state, Case.StateType.type()
 
       timestamps()

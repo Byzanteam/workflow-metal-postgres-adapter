@@ -28,6 +28,13 @@ defmodule WorkflowMetalPostgresAdapter.Query.CaseTest do
       assert workflow_case.state == :created
     end
 
+    test "success with data", %{workflow: workflow, adapter_meta: adapter_meta} do
+      assert {:ok, workflow_case} =
+               Case.create_case(adapter_meta, %{workflow_id: workflow.id, data: %{task: "task"}})
+
+      assert workflow_case.state == :created
+    end
+
     test "not found", %{adapter_meta: adapter_meta} do
       assert {:error, :workflow_not_found} =
                Case.create_case(adapter_meta, %{workflow_id: Ecto.UUID.generate()})
@@ -39,6 +46,15 @@ defmodule WorkflowMetalPostgresAdapter.Query.CaseTest do
       {:ok, workflow_case} = Case.create_case(adapter_meta, %{workflow_id: workflow.id})
       assert {:ok, fetch_case} = Case.fetch_case(adapter_meta, workflow_case.id)
       assert fetch_case.id == workflow_case.id
+    end
+
+    test "success with case data", %{workflow: workflow, adapter_meta: adapter_meta} do
+      {:ok, workflow_case} =
+        Case.create_case(adapter_meta, %{workflow_id: workflow.id, data: %{"task" => "task"}})
+
+      assert {:ok, fetch_case} = Case.fetch_case(adapter_meta, workflow_case.id)
+      assert fetch_case.id === workflow_case.id
+      assert fetch_case.data === %{"task" => "task"}
     end
 
     test "not found", %{adapter_meta: adapter_meta} do

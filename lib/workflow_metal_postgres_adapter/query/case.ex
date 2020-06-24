@@ -9,15 +9,18 @@ defmodule WorkflowMetalPostgresAdapter.Query.Case do
     %{workflow_id: workflow_id} = case_params
 
     with {:ok, workflow} <- Workflow.fetch_workflow(adapter_meta, workflow_id) do
-      workflow_case = %Case{
-        id: uuid(),
-        workflow_id: workflow.id,
-        state: :created
-      }
+      params =
+        Map.merge(case_params, %{
+          id: uuid(),
+          workflow_id: workflow.id,
+          state: :created
+        })
+
+      changeset = Case.changeset(%Case{}, params)
 
       repo = repo(adapter_meta)
 
-      repo.insert(workflow_case, prefix: repo_schema())
+      repo.insert(changeset, prefix: repo_schema())
     end
   end
 

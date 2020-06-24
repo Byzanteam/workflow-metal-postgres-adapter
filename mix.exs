@@ -35,7 +35,7 @@ defmodule WorkflowMetalPostgresAdapter.MixProject do
       {:jason, "~> 1.1"},
       {:postgrex, "~> 0.14"},
       {:ecto_enum, "~> 1.4"},
-      {:workflow_metal, github: "Byzanteam/workflow_metal", branch: "develop"}
+      {:workflow_metal, github: "Byzanteam/workflow_metal", branch: "zhengjie/feature/case-data"}
     ]
   end
 

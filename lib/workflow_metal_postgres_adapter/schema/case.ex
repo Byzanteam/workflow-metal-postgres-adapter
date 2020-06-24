@@ -19,15 +19,23 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Case do
   schema "#{@prefix}_cases" do
     field :workflow_id, Ecto.UUID
     field :state, StateType
+    field :data, :map
 
     timestamps()
+  end
+
+  def changeset(case, params) do
+    case
+    |> cast(params, [:workflow_id, :id, :state, :data])
+    |> validate_required([:id, :workflow_id, :state])
   end
 
   def to_storage_schema(case) do
     %Case{
       id: case.id,
       workflow_id: case.workflow_id,
-      state: case.state
+      state: case.state,
+      data: case.data
     }
   end
 end
