@@ -5,15 +5,15 @@ defmodule WorkflowMetalPostgresAdapter.Query.TokenTest do
 
   @params %{
     places: [
-      %{rid: :start, type: :start},
-      %{rid: :end, type: :end}
+      %{id: :start, type: :start},
+      %{id: :end, type: :end}
     ],
     transitions: [
-      %{rid: :init, executor: TrafficLight.Init}
+      %{id: :init, executor: TrafficLight.Init}
     ],
     arcs: [
-      %{place_rid: :start, transition_rid: :init, direction: :out},
-      %{place_rid: :end, transition_rid: :init, direction: :in}
+      %{place_id: :start, transition_id: :init, direction: :out},
+      %{place_id: :end, transition_id: :init, direction: :in}
     ]
   }
 
