@@ -5,30 +5,30 @@ defmodule WorkflowMetalPostgresAdapter.Query.WorkflowTest do
 
   @params %{
     places: [
-      %{rid: :start, type: :start},
-      %{rid: :yellow, type: :normal},
-      %{rid: :red, type: :normal},
-      %{rid: :green, type: :normal},
-      %{rid: :end, type: :end}
+      %{id: :start, type: :start},
+      %{id: :yellow, type: :normal},
+      %{id: :red, type: :normal},
+      %{id: :green, type: :normal},
+      %{id: :end, type: :end}
     ],
     transitions: [
-      %{rid: :init, executor: TrafficLight.Init},
-      %{rid: :y2r, executor: TrafficLight.Y2R},
-      %{rid: :r2g, executor: TrafficLight.R2G},
-      %{rid: :g2y, executor: TrafficLight.G2Y},
-      %{rid: :will_end, executor: TrafficLight.WillEnd}
+      %{id: :init, executor: TrafficLight.Init},
+      %{id: :y2r, executor: TrafficLight.Y2R},
+      %{id: :r2g, executor: TrafficLight.R2G},
+      %{id: :g2y, executor: TrafficLight.G2Y},
+      %{id: :will_end, executor: TrafficLight.WillEnd}
     ],
     arcs: [
-      %{place_rid: :start, transition_rid: :init, direction: :out},
-      %{place_rid: :yellow, transition_rid: :init, direction: :in},
-      %{place_rid: :yellow, transition_rid: :y2r, direction: :out},
-      %{place_rid: :yellow, transition_rid: :g2y, direction: :in},
-      %{place_rid: :red, transition_rid: :y2r, direction: :in},
-      %{place_rid: :red, transition_rid: :will_end, direction: :out},
-      %{place_rid: :red, transition_rid: :r2g, direction: :out},
-      %{place_rid: :green, transition_rid: :r2g, direction: :in},
-      %{place_rid: :green, transition_rid: :g2y, direction: :out},
-      %{place_rid: :end, transition_rid: :will_end, direction: :in}
+      %{place_id: :start, transition_id: :init, direction: :out},
+      %{place_id: :yellow, transition_id: :init, direction: :in},
+      %{place_id: :yellow, transition_id: :y2r, direction: :out},
+      %{place_id: :yellow, transition_id: :g2y, direction: :in},
+      %{place_id: :red, transition_id: :y2r, direction: :in},
+      %{place_id: :red, transition_id: :will_end, direction: :out},
+      %{place_id: :red, transition_id: :r2g, direction: :out},
+      %{place_id: :green, transition_id: :r2g, direction: :in},
+      %{place_id: :green, transition_id: :g2y, direction: :out},
+      %{place_id: :end, transition_id: :will_end, direction: :in}
     ]
   }
 

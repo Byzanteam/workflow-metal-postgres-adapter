@@ -10,7 +10,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workflow do
   def create_workflow(adapter_meta, workflow_params) do
     repo = repo(adapter_meta)
 
-    workflow_id = Map.get(workflow_params, :id) || uuid()
+    workflow_id = Map.get(workflow_params, :id) |> uuid()
     inserted_at = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
 
     %{
@@ -19,56 +19,55 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workflow do
       arcs: arcs
     } = workflow_params
 
-    places_rid_to_uuids =
-      for place <- places, into: %{} do
-        {place.rid, Map.get(place, :id) || uuid()}
-      end
+    {places, places_uuid_map} =
+      Enum.reduce(places, {[], %{}}, fn place, {places_acc, places_uuid_map_acc} ->
+        place_id = Map.fetch!(place, :id) |> uuid()
 
-    transition_rid_to_uuids =
-      for transition <- transitions, into: %{} do
-        {transition.rid, Map.get(transition, :id) || uuid()}
-      end
+        {[Map.put(place, :id, place_id) | places_acc],
+         Map.put(places_uuid_map_acc, place.id, place_id)}
+      end)
+
+    {transitions, transitions_uuid_map} =
+      Enum.reduce(transitions, {[], %{}}, fn transition,
+                                             {transitions_acc, transitions_uuid_map_acc} ->
+        transition_id = Map.fetch!(transition, :id) |> uuid()
+
+        {[Map.put(transition, :id, transition_id) | transitions_acc],
+         Map.put(transitions_uuid_map_acc, transition.id, transition_id)}
+      end)
 
     place_params =
       Enum.map(places, fn place ->
         params = if is_struct(place), do: Map.from_struct(place), else: place
 
-        params
-        |> Map.merge(%{
-          id: places_rid_to_uuids[params.rid],
+        Map.merge(params, %{
           workflow_id: workflow_id,
           inserted_at: inserted_at
         })
-        |> Map.delete(:rid)
       end)
 
     transition_params =
       Enum.map(transitions, fn transition ->
         params = if is_struct(transition), do: Map.from_struct(transition), else: transition
 
-        params
-        |> Map.merge(%{
-          id: transition_rid_to_uuids[params.rid],
+        Map.merge(params, %{
           workflow_id: workflow_id,
           executor: params.executor,
           inserted_at: inserted_at
         })
-        |> Map.delete(:rid)
       end)
 
     arc_params =
       Enum.map(arcs, fn arc ->
         params = if is_struct(arc), do: Map.from_struct(arc), else: arc
 
-        params
-        |> Map.merge(%{
-          id: Map.get(arc, :id) || uuid(),
-          place_id: places_rid_to_uuids[params.place_rid],
-          transition_id: transition_rid_to_uuids[params.transition_rid],
+        Map.merge(params, %{
+          id: Map.get(arc, :id) |> uuid(),
+          place_id: places_uuid_map[params.place_id],
+          transition_id: transitions_uuid_map[params.transition_id],
           workflow_id: workflow_id,
           inserted_at: inserted_at
         })
-        |> Map.drop([:place_rid, :transition_rid])
       end)
 
     Multi.new()
