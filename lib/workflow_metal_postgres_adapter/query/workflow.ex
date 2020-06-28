@@ -23,17 +23,14 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workflow do
       Enum.map_reduce(places, %{}, fn place, acc ->
         place_id = Map.fetch!(place, :id) |> uuid()
 
-        {Map.put(place, :id, place_id),
-         Map.put(acc, place.id, place_id)}
+        {Map.put(place, :id, place_id), Map.put(acc, place.id, place_id)}
       end)
 
     {transitions, transitions_uuid_map} =
-      Enum.map_reduce(transitions, %{}, fn transition,
-                                             acc ->
+      Enum.map_reduce(transitions, %{}, fn transition, acc ->
         transition_id = Map.fetch!(transition, :id) |> uuid()
 
-        {Map.put(transition, :id, transition_id),
-         Map.put(acc, transition.id, transition_id)}
+        {Map.put(transition, :id, transition_id), Map.put(acc, transition.id, transition_id)}
       end)
 
     place_params =
