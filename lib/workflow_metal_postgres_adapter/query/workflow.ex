@@ -20,20 +20,20 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workflow do
     } = workflow_params
 
     {places, places_uuid_map} =
-      Enum.reduce(places, {[], %{}}, fn place, {places_acc, places_uuid_map_acc} ->
+      Enum.map_reduce(places, %{}, fn place, acc ->
         place_id = Map.fetch!(place, :id) |> uuid()
 
-        {[Map.put(place, :id, place_id) | places_acc],
-         Map.put(places_uuid_map_acc, place.id, place_id)}
+        {Map.put(place, :id, place_id),
+         Map.put(acc, place.id, place_id)}
       end)
 
     {transitions, transitions_uuid_map} =
-      Enum.reduce(transitions, {[], %{}}, fn transition,
-                                             {transitions_acc, transitions_uuid_map_acc} ->
+      Enum.map_reduce(transitions, %{}, fn transition,
+                                             acc ->
         transition_id = Map.fetch!(transition, :id) |> uuid()
 
-        {[Map.put(transition, :id, transition_id) | transitions_acc],
-         Map.put(transitions_uuid_map_acc, transition.id, transition_id)}
+        {Map.put(transition, :id, transition_id),
+         Map.put(acc, transition.id, transition_id)}
       end)
 
     place_params =
