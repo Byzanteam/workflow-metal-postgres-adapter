@@ -16,20 +16,6 @@ WorkflowMetalPostgresAdapter.Repo.start_link()
 defmodule TrafficLight do
   @moduledoc false
 
-  defmodule TransitionTypes do
-    defmodule SplitTypeEnum do
-      use EctoEnum,
-        none: 0,
-        and: 1
-    end
-
-    defmodule JoinTypeEnum do
-      use EctoEnum,
-        none: 0,
-        and: 1
-    end
-  end
-
   defmodule Workflow do
     use WorkflowMetal.Application,
       registry: WorkflowMetal.Registration.LocalRegistry,

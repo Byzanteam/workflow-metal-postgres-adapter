@@ -47,14 +47,11 @@ defmodule WorkflowMetalPostgresAdapter.Query.Workflow do
       Enum.map(transitions, fn transition ->
         params = if is_struct(transition), do: Map.from_struct(transition), else: transition
 
-        params =
-          Map.merge(params, %{
-            workflow_id: workflow_id,
-            executor: params.executor,
-            inserted_at: inserted_at
-          })
-
-        cast(%Transition{}, params, adapter_meta)
+        Map.merge(params, %{
+          workflow_id: workflow_id,
+          executor: params.executor,
+          inserted_at: inserted_at
+        })
       end)
 
     arc_params =
