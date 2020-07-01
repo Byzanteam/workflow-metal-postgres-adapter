@@ -21,13 +21,7 @@ defmodule TrafficLight do
       registry: WorkflowMetal.Registration.LocalRegistry,
       storage: {
         WorkflowMetalPostgresAdapter,
-        repo: WorkflowMetalPostgresAdapter.Repo,
-        enum_types: [
-          transition: [
-            split_type: TransitionTypes.SplitTypeEnum,
-            join_type: TransitionTypes.JoinTypeEnum
-          ]
-        ]
+        repo: WorkflowMetalPostgresAdapter.Repo
       }
   end
 
