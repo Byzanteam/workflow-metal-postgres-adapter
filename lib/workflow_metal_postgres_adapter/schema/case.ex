@@ -12,9 +12,12 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Case do
 
   import EctoEnum
 
-  defenum(StateType, :"#{@prefix}_case_state_type", [:created, :active, :canceled, :finished],
-    schema: @schema
-  )
+  defenum StateType, [
+    created: 0,
+    active: 1,
+    canceled: 2,
+    finished: 3
+  ]
 
   schema "#{@prefix}_cases" do
     field :workflow_id, Ecto.UUID

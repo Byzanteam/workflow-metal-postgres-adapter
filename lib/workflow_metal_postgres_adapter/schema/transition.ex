@@ -8,14 +8,10 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Transition do
   alias WorkflowMetalPostgresAdapter.Schema.ExecutorType
   alias WorkflowMetal.Storage.Schema.Transition
 
-  import EctoEnum
-  defenum(JoinType, :"#{@prefix}_transition_join_type", [:none, :and], schema: @schema)
-  defenum(SplitType, :"#{@prefix}_transition_split_type", [:none, :and], schema: @schema)
-
   schema "#{@prefix}_transitions" do
     field :workflow_id, Ecto.UUID
-    field :join_type, JoinType
-    field :split_type, SplitType
+    field :join_type, :integer
+    field :split_type, :integer
     field :executor, ExecutorType
     field :executor_params, :map
     field :metadata, :map

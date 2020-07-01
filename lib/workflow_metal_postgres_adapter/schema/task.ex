@@ -6,18 +6,19 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Task do
 
   import EctoEnum
 
-  defenum(
-    StateType,
-    :"#{@prefix}_task_state_type",
-    [:started, :allocated, :executing, :completed, :abandoned],
-    schema: @schema
-  )
+  defenum StateType, [
+    started: 0,
+    allocated: 1,
+    executing: 2,
+    completed: 3,
+    abandoned: 4
+  ]
 
   schema "#{@prefix}_tasks" do
     field :workflow_id, Ecto.UUID
     field :transition_id, Ecto.UUID
     field :case_id, Ecto.UUID
-    field :state, StateType, default: :started
+    field :state, StateType
     field :token_payload, :map
 
     timestamps()
