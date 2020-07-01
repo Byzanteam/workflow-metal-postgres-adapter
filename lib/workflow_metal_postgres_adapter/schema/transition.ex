@@ -13,11 +13,8 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Transition do
     JoinType
   }
 
-  @config Application.compile_env(:workflow_metal_postgres_adapter, WorkflowMetalPostgresAdapter)
-  @enum_types Keyword.get(@config, :enum_types, [])
-
-  @split_type get_in(@enum_types, [:transition, :split_type]) || SplitType
-  @join_type get_in(@enum_types, [:transition, :join_type]) || JoinType
+  @split_type Application.compile_env(:workflow_metal_postgres_adapter, [:transition, :split_type]) || SplitType
+  @join_type Application.compile_env(:workflow_metal_postgres_adapter, [:transition, :join_type]) || JoinType
 
   schema "#{@prefix}_transitions" do
     field :workflow_id, Ecto.UUID
