@@ -8,7 +8,10 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Workflow do
   alias WorkflowMetal.Storage.Schema.Workflow
 
   import EctoEnum
-  defenum(StateEnum, :"#{@prefix}workflow_state", [:active, :discarded], schema: @schema)
+
+  defenum StateEnum,
+    active: 0,
+    discarded: 1
 
   schema "#{@prefix}_workflows" do
     field :state, StateEnum

@@ -9,7 +9,10 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Token do
 
   import EctoEnum
 
-  defenum(StateType, :"#{@prefix}_token_state", [:free, :locked, :consumed], schema: @schema)
+  defenum StateType,
+    free: 0,
+    locked: 1,
+    consumed: 2
 
   schema "#{@prefix}_tokens" do
     field :workflow_id, Ecto.UUID

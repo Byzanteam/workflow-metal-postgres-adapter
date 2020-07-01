@@ -12,11 +12,11 @@ defmodule WorkflowMetalPostgresAdapter.Query.WorkflowTest do
       %{id: :end, type: :end}
     ],
     transitions: [
-      %{id: :init, executor: TrafficLight.Init},
-      %{id: :y2r, executor: TrafficLight.Y2R},
-      %{id: :r2g, executor: TrafficLight.R2G},
-      %{id: :g2y, executor: TrafficLight.G2Y},
-      %{id: :will_end, executor: TrafficLight.WillEnd}
+      %{id: :init, executor: TrafficLight.Init, split_type: :none, join_type: :none},
+      %{id: :y2r, executor: TrafficLight.Y2R, split_type: :none, join_type: :none},
+      %{id: :r2g, executor: TrafficLight.R2G, split_type: :none, join_type: :none},
+      %{id: :g2y, executor: TrafficLight.G2Y, split_type: :none, join_type: :none},
+      %{id: :will_end, executor: TrafficLight.WillEnd, split_type: :none, join_type: :none}
     ],
     arcs: [
       %{place_id: :start, transition_id: :init, direction: :out},

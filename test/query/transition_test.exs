@@ -9,7 +9,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.TransitionTest do
       %{id: :end, type: :end}
     ],
     transitions: [
-      %{id: :init, executor: TrafficLight.Init}
+      %{id: :init, executor: TrafficLight.Init, split_type: :none, join_type: :none}
     ],
     arcs: [
       %{place_id: :start, transition_id: :init, direction: :out},

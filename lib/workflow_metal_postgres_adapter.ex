@@ -18,7 +18,9 @@ defmodule WorkflowMetalPostgresAdapter do
 
   def child_spec(_application, config) do
     repo = Keyword.fetch!(config, :repo)
-    {:ok, nil, [repo: repo]}
+    enum_types = Keyword.fetch!(config, :enum_types)
+
+    {:ok, nil, [repo: repo, enum_types: enum_types]}
   end
 
   interface Workflow, create_workflow: 2, fetch_workflow: 2, delete_workflow: 2
