@@ -16,10 +16,33 @@ WorkflowMetalPostgresAdapter.Repo.start_link()
 defmodule TrafficLight do
   @moduledoc false
 
+  defmodule TransitionTypes do
+    defmodule SplitTypeEnum do
+      use EctoEnum,
+        none: 0,
+        and: 1
+    end
+
+    defmodule JoinTypeEnum do
+      use EctoEnum,
+        none: 0,
+        and: 1
+    end
+  end
+
   defmodule Workflow do
     use WorkflowMetal.Application,
       registry: WorkflowMetal.Registration.LocalRegistry,
-      storage: {WorkflowMetalPostgresAdapter, repo: WorkflowMetalPostgresAdapter.Repo}
+      storage: {
+        WorkflowMetalPostgresAdapter,
+        repo: WorkflowMetalPostgresAdapter.Repo,
+        enum_types: [
+          transition: [
+            split_type: TransitionTypes.SplitTypeEnum,
+            join_type: TransitionTypes.JoinTypeEnum
+          ]
+        ]
+      }
   end
 
   defmodule Init do
@@ -178,11 +201,11 @@ end
         %Schema.Place.Params{id: :end, type: :end}
       ],
       transitions: [
-        %Schema.Transition.Params{id: :init, executor: TrafficLight.Init},
-        %Schema.Transition.Params{id: :y2r, executor: TrafficLight.Y2R},
-        %Schema.Transition.Params{id: :r2g, executor: TrafficLight.R2G},
-        %Schema.Transition.Params{id: :g2y, executor: TrafficLight.G2Y},
-        %Schema.Transition.Params{id: :will_end, executor: TrafficLight.WillEnd}
+        %Schema.Transition.Params{id: :init, executor: TrafficLight.Init, split_type: :none, join_type: :none},
+        %Schema.Transition.Params{id: :y2r, executor: TrafficLight.Y2R, split_type: :none, join_type: :none},
+        %Schema.Transition.Params{id: :r2g, executor: TrafficLight.R2G, split_type: :none, join_type: :none},
+        %Schema.Transition.Params{id: :g2y, executor: TrafficLight.G2Y, split_type: :none, join_type: :none},
+        %Schema.Transition.Params{id: :will_end, executor: TrafficLight.WillEnd, split_type: :none, join_type: :none}
       ],
       arcs: [
         %Schema.Arc.Params{place_id: :start, transition_id: :init, direction: :out},
