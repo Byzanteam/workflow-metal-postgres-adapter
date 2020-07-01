@@ -17,11 +17,10 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Place do
 
   import EctoEnum
 
-  defenum TypeEnum, [
+  defenum TypeEnum,
     start: 0,
     normal: 1,
     end: 2
-  ]
 
   schema "#{@prefix}_places" do
     field :workflow_id, Ecto.UUID

@@ -5,6 +5,10 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Transition do
 
   use WorkflowMetalPostgresAdapter.Schema
 
+  use WorkflowMetalPostgresAdapter.Schema.DynamicalEnum.Helper,
+    model_name: :transition,
+    enum_fields: [:join_type, :split_type]
+
   alias WorkflowMetalPostgresAdapter.Schema.ExecutorType
   alias WorkflowMetal.Storage.Schema.Transition
 

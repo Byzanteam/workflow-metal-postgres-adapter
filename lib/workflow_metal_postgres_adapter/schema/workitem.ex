@@ -6,19 +6,18 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Workitem do
 
   import EctoEnum
 
-  defenum StateType, [
+  defenum StateType,
     created: 0,
     started: 1,
     completed: 2,
     abandoned: 3
-  ]
 
   schema "#{@prefix}_workitems" do
     field :workflow_id, Ecto.UUID
     field :transition_id, Ecto.UUID
     field :case_id, Ecto.UUID
     field :task_id, Ecto.UUID
-    field :state, StateType
+    field :state, StateType, default: :created
     field :output, :map
 
     timestamps()

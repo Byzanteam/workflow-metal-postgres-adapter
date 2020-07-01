@@ -11,7 +11,13 @@ defmodule WorkflowMetalPostgresAdapter.RepoCase do
       import WorkflowMetalPostgresAdapter.RepoCase
 
       @adapter_meta [
-        repo: WorkflowMetalPostgresAdapter.Repo
+        repo: WorkflowMetalPostgresAdapter.Repo,
+        enum_types: [
+          transition: [
+            split_type: WorkflowMetalPostgresAdapter.Support.TransitionTypes.SplitTypeEnum,
+            join_type: WorkflowMetalPostgresAdapter.Support.TransitionTypes.JoinTypeEnum
+          ]
+        ]
       ]
       # and any other stuff
     end

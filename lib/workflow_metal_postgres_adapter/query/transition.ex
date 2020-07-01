@@ -14,7 +14,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Transition do
         {:error, :transition_not_found}
 
       transition ->
-        {:ok, transition}
+        {:ok, load(transition, adapter_meta)}
     end
   end
 
@@ -36,7 +36,7 @@ defmodule WorkflowMetalPostgresAdapter.Query.Transition do
         transition_ids ->
           transition_query = from t in Transition, where: t.id in ^transition_ids
 
-          {:ok, repo.all(transition_query, prefix: repo_schema())}
+          {:ok, transition_query |> repo.all(prefix: repo_schema()) |> load(adapter_meta)}
       end
     end
   end
