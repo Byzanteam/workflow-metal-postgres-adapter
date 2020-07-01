@@ -13,7 +13,7 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Transition do
     JoinType
   }
 
-  @config Application.get_env(:workflow_metal_postgres_adapter, WorkflowMetalPostgresAdapter)
+  @config Application.compile_env(:workflow_metal_postgres_adapter, WorkflowMetalPostgresAdapter)
   @enum_types Keyword.get(@config, :enum_types, [])
 
   @split_type get_in(@enum_types, [:transition, :split_type]) || SplitType
