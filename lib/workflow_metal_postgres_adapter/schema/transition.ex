@@ -8,11 +8,6 @@ defmodule WorkflowMetalPostgresAdapter.Schema.Transition do
   alias WorkflowMetalPostgresAdapter.Schema.ExecutorType
   alias WorkflowMetal.Storage.Schema.Transition
 
-  alias WorkflowMetalPostgresAdapter.Schema.TransitionTypesForTestAndExample.{
-    SplitType,
-    JoinType
-  }
-
   import EctoEnum
 
   @split_type Application.compile_env(:workflow_metal_postgres_adapter, [:transition, :split_type]) ||
