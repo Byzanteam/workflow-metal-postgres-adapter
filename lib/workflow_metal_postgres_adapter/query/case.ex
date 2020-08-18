@@ -7,10 +7,11 @@ defmodule WorkflowMetalPostgresAdapter.Query.Case do
 
   def create_case(adapter_meta, case_params) do
     %{workflow_id: workflow_id} = case_params
+    case_id = Map.get(case_params, :id)
 
     with {:ok, workflow} <- Workflow.fetch_workflow(adapter_meta, workflow_id) do
       workflow_case = %Case{
-        id: uuid(),
+        id: uuid(case_id),
         workflow_id: workflow.id,
         state: :created
       }
