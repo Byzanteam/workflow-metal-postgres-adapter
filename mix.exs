@@ -34,7 +34,7 @@ defmodule WorkflowMetalPostgresAdapter.MixProject do
       {:ecto_sql, "~> 3.1"},
       {:jason, "~> 1.1"},
       {:postgrex, "~> 0.14"},
-      {:ecto_enum, "~> 1.4"},
+      {:ecto_enum, github: "Byzanteam-Labs/ecto_enum", branch: "master"},
       {:workflow_metal, github: "Byzanteam/workflow_metal", branch: "develop"}
     ]
   end
