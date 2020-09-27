@@ -17,7 +17,7 @@ defmodule WorkflowMetalPostgresAdapter.Repo.Migrations.InitWorkflows do
       add :type, :string, null: false
       add :metadata, :jsonb
 
-      add :workflow_id, references("workflows", prefix: @prefix)
+      add :workflow_id, references("workflows", prefix: @prefix, on_delete: :delete_all)
 
       timestamps()
     end
@@ -31,7 +31,7 @@ defmodule WorkflowMetalPostgresAdapter.Repo.Migrations.InitWorkflows do
       add :executor_params, :map
       add :metadata, :jsonb
 
-      add :workflow_id, references("workflows", prefix: @prefix)
+      add :workflow_id, references("workflows", prefix: @prefix, on_delete: :delete_all)
 
       timestamps()
     end
@@ -42,9 +42,9 @@ defmodule WorkflowMetalPostgresAdapter.Repo.Migrations.InitWorkflows do
       add :direction, :string, null: false
       add :metadata, :jsonb
 
-      add :place_id, references("places", prefix: @prefix)
-      add :transition_id, references("transitions", prefix: @prefix)
-      add :workflow_id, references("workflows", prefix: @prefix)
+      add :place_id, references("places", prefix: @prefix, on_delete: :delete_all)
+      add :transition_id, references("transitions", prefix: @prefix, on_delete: :delete_all)
+      add :workflow_id, references("workflows", prefix: @prefix, on_delete: :delete_all)
 
       timestamps()
     end
@@ -56,7 +56,7 @@ defmodule WorkflowMetalPostgresAdapter.Repo.Migrations.InitWorkflows do
     create table("cases", prefix: @prefix) do
       add :state, :string, null: false
 
-      add :workflow_id, references("workflows", prefix: @prefix)
+      add :workflow_id, references("workflows", prefix: @prefix, on_delete: :delete_all)
 
       timestamps()
     end
@@ -67,9 +67,9 @@ defmodule WorkflowMetalPostgresAdapter.Repo.Migrations.InitWorkflows do
       add :state, :string, null: false
       add :token_payload, :map
 
-      add :workflow_id, references("workflows", prefix: @prefix)
-      add :transition_id, references("transitions", prefix: @prefix)
-      add :case_id, references("cases", prefix: @prefix)
+      add :workflow_id, references("workflows", prefix: @prefix, on_delete: :delete_all)
+      add :transition_id, references("transitions", prefix: @prefix, on_delete: :delete_all)
+      add :case_id, references("cases", prefix: @prefix, on_delete: :delete_all)
 
       timestamps()
     end
@@ -84,10 +84,10 @@ defmodule WorkflowMetalPostgresAdapter.Repo.Migrations.InitWorkflows do
       add :locked_by_task_id, :uuid
       add :consumed_by_task_id, :uuid
 
-      add :workflow_id, references("workflows", prefix: @prefix)
-      add :place_id, references("places", prefix: @prefix)
-      add :transition_id, references("transitions", prefix: @prefix)
-      add :case_id, references("cases", prefix: @prefix)
+      add :workflow_id, references("workflows", prefix: @prefix, on_delete: :delete_all)
+      add :place_id, references("places", prefix: @prefix, on_delete: :delete_all)
+      add :transition_id, references("transitions", prefix: @prefix, on_delete: :delete_all)
+      add :case_id, references("cases", prefix: @prefix, on_delete: :delete_all)
 
       timestamps()
     end
@@ -98,11 +98,11 @@ defmodule WorkflowMetalPostgresAdapter.Repo.Migrations.InitWorkflows do
       add :state, :string, null: false
       add :output, :map
 
-      add :workflow_id, references("workflows", prefix: @prefix)
-      add :place_id, references("places", prefix: @prefix)
-      add :transition_id, references("transitions", prefix: @prefix)
-      add :case_id, references("cases", prefix: @prefix)
-      add :task_id, references("tasks", prefix: @prefix)
+      add :workflow_id, references("workflows", prefix: @prefix, on_delete: :delete_all)
+      add :place_id, references("places", prefix: @prefix, on_delete: :delete_all)
+      add :transition_id, references("transitions", prefix: @prefix, on_delete: :delete_all)
+      add :case_id, references("cases", prefix: @prefix, on_delete: :delete_all)
+      add :task_id, references("tasks", prefix: @prefix, on_delete: :delete_all)
 
       timestamps()
     end
