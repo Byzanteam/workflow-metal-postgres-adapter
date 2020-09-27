@@ -4,6 +4,10 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Schema do
 
     quote do
       defmodule Workflow do
+        @moduledoc """
+        Workflow for #{inspect(unquote(schema))}.
+        """
+
         unquote(schema_attributes())
 
         schema unquote(source) do
@@ -18,12 +22,14 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Schema do
           unquote(block)
         end
 
-        def to_storage_schema(%__MODULE__{} = workflow) do
-          %WorkflowMetal.Storage.Schema.Workflow{
-            id: workflow.id,
-            state: workflow.state,
-            metadata: workflow.metadata
-          }
+        defimpl WorkflowMetal.Storage.Adapters.Postgres.StorageSchema do
+          def transform(%unquote(schema).Workflow{} = workflow) do
+            %WorkflowMetal.Storage.Schema.Workflow{
+              id: workflow.id,
+              state: workflow.state,
+              metadata: workflow.metadata
+            }
+          end
         end
       end
     end
@@ -34,6 +40,10 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Schema do
 
     quote do
       defmodule Place do
+        @moduledoc """
+        Place for #{inspect(unquote(schema))}.
+        """
+
         unquote(schema_attributes())
 
         schema unquote(source) do
@@ -45,13 +55,15 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Schema do
           unquote(block)
         end
 
-        def to_storage_schema(%__MODULE__{} = place) do
-          %WorkflowMetal.Storage.Schema.Place{
-            id: place.id,
-            workflow_id: place.workflow_id,
-            type: place.type,
-            metadata: place.metadata
-          }
+        defimpl WorkflowMetal.Storage.Adapters.Postgres.StorageSchema do
+          def transform(%unquote(schema).Place{} = place) do
+            %WorkflowMetal.Storage.Schema.Place{
+              id: place.id,
+              workflow_id: place.workflow_id,
+              type: place.type,
+              metadata: place.metadata
+            }
+          end
         end
       end
     end
@@ -65,6 +77,10 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Schema do
 
     quote do
       defmodule Transition do
+        @moduledoc """
+        Transition for #{inspect(unquote(schema))}.
+        """
+
         unquote(schema_attributes())
 
         schema unquote(source) do
@@ -79,16 +95,18 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Schema do
           unquote(block)
         end
 
-        def to_storage_schema(%__MODULE__{} = transition) do
-          %WorkflowMetal.Storage.Schema.Transition{
-            id: transition.id,
-            workflow_id: transition.workflow_id,
-            join_type: transition.join_type,
-            split_type: transition.split_type,
-            executor: transition.executor,
-            executor_params: transition.executor_params,
-            metadata: transition.metadata
-          }
+        defimpl WorkflowMetal.Storage.Adapters.Postgres.StorageSchema do
+          def transform(%unquote(schema).Transition{} = transition) do
+            %WorkflowMetal.Storage.Schema.Transition{
+              id: transition.id,
+              workflow_id: transition.workflow_id,
+              join_type: transition.join_type,
+              split_type: transition.split_type,
+              executor: transition.executor,
+              executor_params: transition.executor_params,
+              metadata: transition.metadata
+            }
+          end
         end
       end
     end
@@ -99,6 +117,10 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Schema do
 
     quote do
       defmodule Arc do
+        @moduledoc """
+        Arc for #{inspect(unquote(schema))}.
+        """
+
         unquote(schema_attributes())
 
         schema unquote(source) do
@@ -112,15 +134,17 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Schema do
           unquote(block)
         end
 
-        def to_storage_schema(%__MODULE__{} = arc) do
-          %WorkflowMetal.Storage.Schema.Arc{
-            id: arc.id,
-            workflow_id: arc.workflow_id,
-            transition_id: arc.transition_id,
-            place_id: arc.place_id,
-            direction: arc.direction,
-            metadata: arc.metadata
-          }
+        defimpl WorkflowMetal.Storage.Adapters.Postgres.StorageSchema do
+          def transform(%unquote(schema).Arc{} = arc) do
+            %WorkflowMetal.Storage.Schema.Arc{
+              id: arc.id,
+              workflow_id: arc.workflow_id,
+              transition_id: arc.transition_id,
+              place_id: arc.place_id,
+              direction: arc.direction,
+              metadata: arc.metadata
+            }
+          end
         end
       end
     end
@@ -131,6 +155,10 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Schema do
 
     quote do
       defmodule Case do
+        @moduledoc """
+        Case for #{inspect(unquote(schema))}.
+        """
+
         unquote(schema_attributes())
 
         schema unquote(source) do
@@ -141,12 +169,14 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Schema do
           unquote(block)
         end
 
-        def to_storage_schema(%__MODULE__{} = workflow_case) do
-          %WorkflowMetal.Storage.Schema.Case{
-            id: workflow_case.id,
-            workflow_id: workflow_case.workflow_id,
-            state: workflow_case.state
-          }
+        defimpl WorkflowMetal.Storage.Adapters.Postgres.StorageSchema do
+          def transform(%unquote(schema).Case{} = workflow_case) do
+            %WorkflowMetal.Storage.Schema.Case{
+              id: workflow_case.id,
+              workflow_id: workflow_case.workflow_id,
+              state: workflow_case.state
+            }
+          end
         end
       end
     end
@@ -157,6 +187,10 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Schema do
 
     quote do
       defmodule Token do
+        @moduledoc """
+        Token for #{inspect(unquote(schema))}.
+        """
+
         unquote(schema_attributes())
 
         schema unquote(source) do
@@ -173,18 +207,20 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Schema do
           unquote(block)
         end
 
-        def to_storage_schema(%__MODULE__{} = token) do
-          %WorkflowMetal.Storage.Schema.Token{
-            id: token.id,
-            workflow_id: token.workflow_id,
-            case_id: token.case_id,
-            place_id: token.place_id,
-            produced_by_task_id: token.produced_by_task_id,
-            locked_by_task_id: token.locked_by_task_id,
-            consumed_by_task_id: token.consumed_by_task_id,
-            payload: token.payload,
-            state: token.state
-          }
+        defimpl WorkflowMetal.Storage.Adapters.Postgres.StorageSchema do
+          def transform(%unquote(schema).Token{} = token) do
+            %WorkflowMetal.Storage.Schema.Token{
+              id: token.id,
+              workflow_id: token.workflow_id,
+              case_id: token.case_id,
+              place_id: token.place_id,
+              produced_by_task_id: token.produced_by_task_id,
+              locked_by_task_id: token.locked_by_task_id,
+              consumed_by_task_id: token.consumed_by_task_id,
+              payload: token.payload,
+              state: token.state
+            }
+          end
         end
       end
     end
@@ -195,6 +231,10 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Schema do
 
     quote do
       defmodule Task do
+        @moduledoc """
+        Task for #{inspect(unquote(schema))}.
+        """
+
         unquote(schema_attributes())
 
         schema unquote(source) do
@@ -229,6 +269,10 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Schema do
 
     quote do
       defmodule Workitem do
+        @moduledoc """
+        Workitem for #{inspect(unquote(schema))}.
+        """
+
         unquote(schema_attributes())
 
         schema unquote(source) do
@@ -244,16 +288,18 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Schema do
           unquote(block)
         end
 
-        def to_storage_schema(%__MODULE__{} = workitem) do
-          %WorkflowMetal.Storage.Schema.Workitem{
-            id: workitem.id,
-            workflow_id: workitem.workflow_id,
-            transition_id: workitem.transition_id,
-            case_id: workitem.case_id,
-            task_id: workitem.task_id,
-            output: workitem.output,
-            state: workitem.state
-          }
+        defimpl WorkflowMetal.Storage.Adapters.Postgres.StorageSchema do
+          def transform(%unquote(schema).Workitem{} = workitem) do
+            %WorkflowMetal.Storage.Schema.Workitem{
+              id: workitem.id,
+              workflow_id: workitem.workflow_id,
+              transition_id: workitem.transition_id,
+              case_id: workitem.case_id,
+              task_id: workitem.task_id,
+              output: workitem.output,
+              state: workitem.state
+            }
+          end
         end
       end
     end

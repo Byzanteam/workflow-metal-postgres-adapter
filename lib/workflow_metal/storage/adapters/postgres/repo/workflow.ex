@@ -1,4 +1,6 @@
 defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Workflow do
+  @moduledoc false
+
   alias Ecto.Multi
 
   def insert_workflow(config, workflow_schema, workflow_associations_params) do
