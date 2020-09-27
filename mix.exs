@@ -30,12 +30,11 @@ defmodule WorkflowMetalPostgresAdapter.MixProject do
       {:credo, "~> 1.2", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0.0-rc.7", only: [:dev], runtime: false},
       {:doctor, "~> 0.12.0", only: [:dev]},
-      {:ecto, "~> 3.1"},
-      {:ecto_sql, "~> 3.1"},
+      {:ecto, "~> 3.5-pre"},
+      {:ecto_sql, "~> 3.5-pre"},
       {:jason, "~> 1.1"},
       {:postgrex, "~> 0.14"},
-      {:ecto_enum, github: "Byzanteam-Labs/ecto_enum", branch: "master"},
-      {:workflow_metal, github: "Byzanteam/workflow_metal", branch: "develop"}
+      {:workflow_metal, github: "Byzanteam/workflow_metal", branch: "fahchen/refactor/storage"}
     ]
   end
 

@@ -6,7 +6,6 @@
   ],
   import_deps: [
     :ecto,
-    :ecto_sql,
-    :ecto_enum
+    :ecto_sql
   ]
 ]
