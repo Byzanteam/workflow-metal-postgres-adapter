@@ -19,10 +19,11 @@ defmodule WorkflowMetalPostgresAdapter.MixProject do
 
   # Run "mix help compile.app" to learn about applications.
   def application do
-    [
-      extra_applications: [:logger]
-    ]
+    [extra_applications: application(Mix.env())]
   end
+
+  defp application(:test), do: [:postgrex, :ecto, :logger]
+  defp application(_), do: [:logger]
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
