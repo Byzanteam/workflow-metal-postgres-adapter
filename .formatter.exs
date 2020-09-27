@@ -4,6 +4,17 @@
   locals_without_parens: [
     interface: 2
   ],
+  export: [
+    locals_without_parens: [
+      workflow_schema: 2,
+      place_schema: 2,
+      transition_schema: 3,
+      arc_schema: 2,
+      token_schema: 2,
+      task_schema: 2,
+      workitem_schema: 2
+    ]
+  ],
   import_deps: [
     :ecto,
     :ecto_sql
