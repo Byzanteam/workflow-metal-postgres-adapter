@@ -16,6 +16,7 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Task do
       :case_id,
       :workflow_id
     ])
+    |> Ecto.Changeset.change(id: Ecto.UUID.generate())
     |> Ecto.Changeset.validate_required([:id, :state, :transition_id, :case_id, :workflow_id])
     |> repo_insert(config)
   end

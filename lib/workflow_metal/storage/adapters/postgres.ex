@@ -142,7 +142,7 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres do
       def fetch_task(adapter_meta, task_id) do
         adapter_meta
         |> config()
-        |> Repo.Case.fetch_task(task_id)
+        |> Repo.Task.fetch_task(task_id)
         |> unquote(__MODULE__).to_storage_schema()
       end
 
@@ -150,7 +150,7 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres do
       def fetch_tasks(adapter_meta, case_id, options) do
         adapter_meta
         |> config()
-        |> Repo.Case.fetch_tasks(case_id, options)
+        |> Repo.Task.fetch_tasks(case_id, options)
         |> unquote(__MODULE__).to_storage_schema()
       end
 
@@ -158,7 +158,7 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres do
       def update_task(adapter_meta, task_id, params) do
         adapter_meta
         |> config()
-        |> Repo.Case.update_task(task_id, params)
+        |> Repo.Task.update_task(task_id, params)
         |> unquote(__MODULE__).to_storage_schema()
       end
 
