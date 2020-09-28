@@ -11,18 +11,21 @@ alias WorkflowMetal.Storage.Schema
 #  (start)      | g2y +<----+(green)<------+ r2g |             (end)
 #               +-----+                    +-----+
 
-WorkflowMetalPostgresAdapter.Repo.start_link()
+TestStorage.Repo.start_link()
 
 defmodule TrafficLight do
   @moduledoc false
 
+  defmodule WorkflowStorage do
+    use WorkflowMetal.Storage.Adapters.Postgres,
+      repo: TestStorage.Repo,
+      schema: TestStorage.Schema
+  end
+
   defmodule Workflow do
     use WorkflowMetal.Application,
       registry: WorkflowMetal.Registration.LocalRegistry,
-      storage: {
-        WorkflowMetalPostgresAdapter,
-        repo: WorkflowMetalPostgresAdapter.Repo
-      }
+      storage: TrafficLight.WorkflowStorage
   end
 
   defmodule Init do
@@ -169,43 +172,160 @@ end
 
 {:ok, _pid} = TrafficLight.Workflow.start_link()
 
-{:ok, traffic_light_workflow} =
-  WorkflowMetal.Storage.create_workflow(
-    TrafficLight.Workflow,
-    %Schema.Workflow.Params{
-      places: [
-        %Schema.Place.Params{id: :start, type: :start},
-        %Schema.Place.Params{id: :yellow, type: :normal},
-        %Schema.Place.Params{id: :red, type: :normal},
-        %Schema.Place.Params{id: :green, type: :normal},
-        %Schema.Place.Params{id: :end, type: :end}
-      ],
-      transitions: [
-        %Schema.Transition.Params{id: :init, executor: TrafficLight.Init, split_type: :none, join_type: :none},
-        %Schema.Transition.Params{id: :y2r, executor: TrafficLight.Y2R, split_type: :none, join_type: :none},
-        %Schema.Transition.Params{id: :r2g, executor: TrafficLight.R2G, split_type: :none, join_type: :none},
-        %Schema.Transition.Params{id: :g2y, executor: TrafficLight.G2Y, split_type: :none, join_type: :none},
-        %Schema.Transition.Params{id: :will_end, executor: TrafficLight.WillEnd, split_type: :none, join_type: :none}
-      ],
-      arcs: [
-        %Schema.Arc.Params{place_id: :start, transition_id: :init, direction: :out},
-        %Schema.Arc.Params{place_id: :yellow, transition_id: :init, direction: :in},
-        %Schema.Arc.Params{place_id: :yellow, transition_id: :y2r, direction: :out},
-        %Schema.Arc.Params{place_id: :yellow, transition_id: :g2y, direction: :in},
-        %Schema.Arc.Params{place_id: :red, transition_id: :y2r, direction: :in},
-        %Schema.Arc.Params{place_id: :red, transition_id: :will_end, direction: :out},
-        %Schema.Arc.Params{place_id: :red, transition_id: :r2g, direction: :out},
-        %Schema.Arc.Params{place_id: :green, transition_id: :r2g, direction: :in},
-        %Schema.Arc.Params{place_id: :green, transition_id: :g2y, direction: :out},
-        %Schema.Arc.Params{place_id: :end, transition_id: :will_end, direction: :in}
-      ]
+%{id: workflow_id} =
+  workflow_schema = %Schema.Workflow{
+    id: Ecto.UUID.generate(),
+    state: :active
+  }
+
+start_id = Ecto.UUID.generate()
+yellow_id = Ecto.UUID.generate()
+red_id = Ecto.UUID.generate()
+green_id = Ecto.UUID.generate()
+end_id = Ecto.UUID.generate()
+
+init_id = Ecto.UUID.generate()
+y2r_id = Ecto.UUID.generate()
+r2g_id = Ecto.UUID.generate()
+g2y_id = Ecto.UUID.generate()
+will_end_id = Ecto.UUID.generate()
+
+associations_params = %{
+  places: [
+    %Schema.Place{id: start_id, type: :start, workflow_id: workflow_id},
+    %Schema.Place{id: yellow_id, type: :normal, workflow_id: workflow_id},
+    %Schema.Place{id: red_id, type: :normal, workflow_id: workflow_id},
+    %Schema.Place{id: green_id, type: :normal, workflow_id: workflow_id},
+    %Schema.Place{id: end_id, type: :end, workflow_id: workflow_id}
+  ],
+  transitions: [
+    %Schema.Transition{
+      id: init_id,
+      executor: TrafficLight.Init,
+      split_type: :none,
+      join_type: :none,
+      workflow_id: workflow_id
+    },
+    %Schema.Transition{
+      id: y2r_id,
+      executor: TrafficLight.Y2R,
+      split_type: :none,
+      join_type: :none,
+      workflow_id: workflow_id
+    },
+    %Schema.Transition{
+      id: r2g_id,
+      executor: TrafficLight.R2G,
+      split_type: :none,
+      join_type: :none,
+      workflow_id: workflow_id
+    },
+    %Schema.Transition{
+      id: g2y_id,
+      executor: TrafficLight.G2Y,
+      split_type: :none,
+      join_type: :none,
+      workflow_id: workflow_id
+    },
+    %Schema.Transition{
+      id: will_end_id,
+      executor: TrafficLight.WillEnd,
+      split_type: :none,
+      join_type: :none,
+      workflow_id: workflow_id
     }
+  ],
+  arcs: [
+    %Schema.Arc{
+      id: Ecto.UUID.generate(),
+      place_id: start_id,
+      transition_id: init_id,
+      direction: :out,
+      workflow_id: workflow_id
+    },
+    %Schema.Arc{
+      id: Ecto.UUID.generate(),
+      place_id: yellow_id,
+      transition_id: init_id,
+      direction: :in,
+      workflow_id: workflow_id
+    },
+    %Schema.Arc{
+      id: Ecto.UUID.generate(),
+      place_id: yellow_id,
+      transition_id: y2r_id,
+      direction: :out,
+      workflow_id: workflow_id
+    },
+    %Schema.Arc{
+      id: Ecto.UUID.generate(),
+      place_id: yellow_id,
+      transition_id: g2y_id,
+      direction: :in,
+      workflow_id: workflow_id
+    },
+    %Schema.Arc{
+      id: Ecto.UUID.generate(),
+      place_id: red_id,
+      transition_id: y2r_id,
+      direction: :in,
+      workflow_id: workflow_id
+    },
+    %Schema.Arc{
+      id: Ecto.UUID.generate(),
+      place_id: red_id,
+      transition_id: will_end_id,
+      direction: :out,
+      workflow_id: workflow_id
+    },
+    %Schema.Arc{
+      id: Ecto.UUID.generate(),
+      place_id: red_id,
+      transition_id: r2g_id,
+      direction: :out,
+      workflow_id: workflow_id
+    },
+    %Schema.Arc{
+      id: Ecto.UUID.generate(),
+      place_id: green_id,
+      transition_id: r2g_id,
+      direction: :in,
+      workflow_id: workflow_id
+    },
+    %Schema.Arc{
+      id: Ecto.UUID.generate(),
+      place_id: green_id,
+      transition_id: g2y_id,
+      direction: :out,
+      workflow_id: workflow_id
+    },
+    %Schema.Arc{
+      id: Ecto.UUID.generate(),
+      place_id: end_id,
+      transition_id: will_end_id,
+      direction: :in,
+      workflow_id: workflow_id
+    }
+  ]
+}
+
+config = [
+  repo: TestStorage.Repo,
+  schema: TestStorage.Schema
+]
+
+{:ok, traffic_light_workflow} =
+  TrafficLight.WorkflowStorage.insert_workflow(
+    config,
+    workflow_schema,
+    associations_params
   )
 
-# Create a case
-# ```elixir
-# WorkflowMetal.Case.Supervisor.create_case TrafficLight, %Schema.Case.Params{workflow_id: traffic_light_workflow.id}
-# ```
-WorkflowMetal.Case.Supervisor.create_case(TrafficLight.Workflow, %Schema.Case.Params{
-  workflow_id: traffic_light_workflow.id
-})
+{:ok, workflow_case} =
+  TrafficLight.WorkflowStorage.insert_case(config, %Schema.Case{
+    id: Ecto.UUID.generate(),
+    state: :created,
+    workflow_id: traffic_light_workflow.id
+  })
+
+TrafficLight.Workflow.open_case(workflow_case.id)

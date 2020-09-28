@@ -18,7 +18,10 @@ config :workflow_metal_postgres_adapter, WorkflowMetalPostgresAdapter,
   defmodule Workflow do
     use WorkflowMetal.Application,
       registry: WorkflowMetal.Registration.LocalRegistry,
-      storage: {WorkflowMetalPostgresAdapter, repo: TestWorkflow.Repo}
+      storage: {
+        WorkflowMetal.Storage.Adapters.Postgres,
+        repo: TestStorage.Repo, schema: TestStorage.Schema
+      }
   end
 ```
 
@@ -27,7 +30,7 @@ config :workflow_metal_postgres_adapter, WorkflowMetalPostgresAdapter,
 * Migrate repo first.
 
 ```shell
-iex --dot-iex examples/traffic_light.exs -S mix
+MIX_ENV=test iex --dot-iex examples/traffic_light.exs -S mix
 ```
 
 ## Installation
@@ -46,4 +49,3 @@ end
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/workflow_metal_postgres_adapter](https://hexdocs.pm/workflow_metal_postgres_adapter).
-
