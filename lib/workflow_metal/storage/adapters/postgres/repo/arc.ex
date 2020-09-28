@@ -1,8 +1,6 @@
 defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Arc do
   @moduledoc false
 
-  alias WorkflowMetal.Storage.Adapters.Postgres.Repo.Transition
-
   use WorkflowMetal.Storage.Adapters.Postgres.Repo
 
   import Ecto.Query

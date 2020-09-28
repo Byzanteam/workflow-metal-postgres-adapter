@@ -1,8 +1,6 @@
 defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Transition do
   @moduledoc false
 
-  alias WorkflowMetal.Storage.Adapters.Postgres.Repo.Place
-
   use WorkflowMetal.Storage.Adapters.Postgres.Repo
 
   def fetch_transition(config, transition_id) do

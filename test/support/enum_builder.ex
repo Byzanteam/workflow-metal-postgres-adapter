@@ -1,8 +1,6 @@
 defmodule EnumBuilder do
   @moduledoc false
 
-  alias EctoEnum.Typespec
-
   defmacro __using__(keys) do
     quote bind_quoted: [keys: keys] do
       @behaviour Ecto.Type
