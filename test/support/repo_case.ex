@@ -14,7 +14,7 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.RepoCase do
       ]
 
       @workflow_schema unquote(__MODULE__).build_workflow_schema()
-      @workflow_associations_params unquote(__MODULE__).build_workflow_associations_params(
+      @workflow_associations_params unquote(__MODULE__).build_associations_params(
                                       @workflow_schema
                                     )
 
@@ -22,15 +22,16 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.RepoCase do
         alias WorkflowMetal.Storage.Adapters.Postgres.Repo.Workflow
 
         workflow_schema = unquote(__MODULE__).build_workflow_schema()
+        associations_params = unquote(__MODULE__).build_associations_params(workflow_schema)
 
         {:ok, workflow} =
           Workflow.insert_workflow(
             @config,
             workflow_schema,
-            unquote(__MODULE__).build_workflow_associations_params(workflow_schema)
+            associations_params
           )
 
-        [workflow: workflow]
+        [workflow: workflow, associations_params: associations_params]
       end
     end
   end
@@ -48,6 +49,17 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.RepoCase do
     :ok
   end
 
+  # Traffic light
+  #
+  # +------+                    +-----+                      +----------+
+  # | init +---->(yellow)+----->+ y2r +------>(red)+-------->+ will_end |
+  # +---+--+         ^          +-----+         +            +-----+----+
+  #     ^            |                          |                  |
+  #     |            |                          v                  |
+  #     +         +--+--+                    +--+--+               v
+  #  (start)      | g2y +<----+(green)<------+ r2g |             (end)
+  #               +-----+                    +-----+
+
   def build_workflow_schema do
     %Schema.Workflow{
       id: Ecto.UUID.generate(),
@@ -55,7 +67,7 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.RepoCase do
     }
   end
 
-  def build_workflow_associations_params(workflow_schema) do
+  def build_associations_params(workflow_schema) do
     %{id: workflow_id} = workflow_schema
 
     start_id = Ecto.UUID.generate()
