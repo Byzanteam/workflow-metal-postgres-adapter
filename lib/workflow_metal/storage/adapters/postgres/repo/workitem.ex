@@ -9,7 +9,6 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Workitem do
     schema
     |> struct()
     |> Ecto.Changeset.cast(Map.from_struct(workitem_schema), [
-      :id,
       :state,
       :output,
       :transition_id,
@@ -17,6 +16,7 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Workitem do
       :task_id,
       :workflow_id
     ])
+    |> Ecto.Changeset.change(id: Ecto.UUID.generate())
     |> Ecto.Changeset.validate_required([
       :id,
       :state,

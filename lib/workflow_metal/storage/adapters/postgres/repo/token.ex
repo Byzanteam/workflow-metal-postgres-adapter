@@ -20,7 +20,6 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Token do
     |> Ecto.Changeset.cast(
       Map.from_struct(token_schema),
       [
-        :id,
         :state,
         :payload,
         :place_id,
@@ -29,6 +28,7 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Token do
         :workflow_id
       ]
     )
+    |> Ecto.Changeset.change(id: Ecto.UUID.generate())
     |> Ecto.Changeset.validate_required([
       :id,
       :state,
