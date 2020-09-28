@@ -195,12 +195,13 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Schema do
 
         schema unquote(source) do
           field :state, Ecto.Enum, values: [:free, :locked, :consumed]
-          field :case_id, Ecto.UUID
+          field :payload, :map
+
           field :place_id, Ecto.UUID
+          field :case_id, Ecto.UUID
           field :produced_by_task_id, Ecto.UUID
           field :locked_by_task_id, Ecto.UUID
           field :consumed_by_task_id, Ecto.UUID
-          field :payload, :map
 
           belongs_to :workflow, unquote(schema).Workflow
 
@@ -277,11 +278,11 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Schema do
 
         schema unquote(source) do
           field :state, Ecto.Enum, values: [:created, :started, :completed, :abandoned]
+          field :output, :map
 
           field :transition_id, Ecto.UUID
           field :case_id, Ecto.UUID
           field :task_id, Ecto.UUID
-          field :output, :map
 
           belongs_to :workflow, unquote(schema).Workflow
 

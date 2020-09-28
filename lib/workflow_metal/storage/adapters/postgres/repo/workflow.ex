@@ -17,8 +17,11 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Workflow do
     |> do_insert_arcs(arcs, config)
     |> repo_transaction(config)
     |> case do
-      {:ok, %{workflow: workflow}} -> {:ok, workflow}
-      error -> error
+      {:ok, %{workflow: workflow}} ->
+        {:ok, workflow}
+
+      {:error, _failed_operation, failed_value, _changes_so_far} ->
+        {:error, failed_value}
     end
   end
 

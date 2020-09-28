@@ -6,29 +6,18 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Task do
   def insert_task(config, task_schema) do
     schema = get_schema(Task, config)
 
-    changeset =
-      schema
-      |> struct()
-      |> Ecto.Changeset.cast(Map.from_struct(task_schema), [
-        :id,
-        :state,
-        :token_payload,
-        :transition_id,
-        :case_id,
-        :workflow_id
-      ])
-      |> Ecto.Changeset.validate_required([:id, :state, :transition_id, :case_id, :workflow_id])
-
-    Multi.new()
-    |> Multi.insert(:insert_task, changeset)
-    |> repo_transaction(config)
-    |> case do
-      {:ok, %{insert_task: workflow_task}} ->
-        {:ok, workflow_task}
-
-      {:error, error} ->
-        {:error, error}
-    end
+    schema
+    |> struct()
+    |> Ecto.Changeset.cast(Map.from_struct(task_schema), [
+      :id,
+      :state,
+      :token_payload,
+      :transition_id,
+      :case_id,
+      :workflow_id
+    ])
+    |> Ecto.Changeset.validate_required([:id, :state, :transition_id, :case_id, :workflow_id])
+    |> repo_insert(config)
   end
 
   def fetch_task(config, task_id) do
@@ -72,21 +61,10 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Task do
   def update_task(config, task_id, params) do
     schema = get_schema(Task, config)
 
-    changeset =
-      schema
-      |> struct(%{id: task_id})
-      |> Ecto.Changeset.cast(params, [:state, :token_payload])
-      |> Ecto.Changeset.validate_required([:state])
-
-    Multi.new()
-    |> Multi.update(:update_task, changeset)
-    |> repo_transaction(config)
-    |> case do
-      {:ok, %{update_task: workflow_task}} ->
-        {:ok, workflow_task}
-
-      {:error, error} ->
-        {:error, error}
-    end
+    schema
+    |> struct(%{id: task_id})
+    |> Ecto.Changeset.cast(params, [:state, :token_payload])
+    |> Ecto.Changeset.validate_required([:state])
+    |> repo_update(config)
   end
 end

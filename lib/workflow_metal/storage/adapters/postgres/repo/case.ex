@@ -6,22 +6,11 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Case do
   def insert_case(config, case_schema) do
     schema = get_schema(Case, config)
 
-    changeset =
-      schema
-      |> struct()
-      |> Ecto.Changeset.cast(Map.from_struct(case_schema), [:id, :state, :workflow_id])
-      |> Ecto.Changeset.validate_required([:id, :state, :workflow_id])
-
-    Multi.new()
-    |> Multi.insert(:insert_case, changeset)
-    |> repo_transaction(config)
-    |> case do
-      {:ok, %{insert_case: workflow_case}} ->
-        {:ok, workflow_case}
-
-      {:error, error} ->
-        {:error, error}
-    end
+    schema
+    |> struct()
+    |> Ecto.Changeset.cast(Map.from_struct(case_schema), [:id, :state, :workflow_id])
+    |> Ecto.Changeset.validate_required([:id, :state, :workflow_id])
+    |> repo_insert(config)
   end
 
   def fetch_case(config, case_id) do
@@ -39,21 +28,10 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Case do
   def update_case(config, case_id, params) do
     schema = get_schema(Case, config)
 
-    changeset =
-      schema
-      |> struct(%{id: case_id})
-      |> Ecto.Changeset.cast(params, [:state])
-      |> Ecto.Changeset.validate_required([:state])
-
-    Multi.new()
-    |> Multi.update(:update_case, changeset)
-    |> repo_transaction(config)
-    |> case do
-      {:ok, %{update_case: workflow_case}} ->
-        {:ok, workflow_case}
-
-      {:error, error} ->
-        {:error, error}
-    end
+    schema
+    |> struct(%{id: case_id})
+    |> Ecto.Changeset.cast(params, [:state])
+    |> Ecto.Changeset.validate_required([:state])
+    |> repo_update(config)
   end
 end

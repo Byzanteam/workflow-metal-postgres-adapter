@@ -15,6 +15,14 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo do
         apply(get_repo(config), :transaction, [multi, config])
       end
 
+      defp repo_insert(struct_or_changeset, config) do
+        apply(get_repo(config), :insert, [struct_or_changeset, config])
+      end
+
+      defp repo_update(changeset, config) do
+        apply(get_repo(config), :update, [changeset, config])
+      end
+
       defp repo_get_by(queryable, clauses, config) do
         apply(get_repo(config), :get_by, [queryable, clauses, config])
       end
