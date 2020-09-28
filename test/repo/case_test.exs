@@ -35,7 +35,7 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.CaseTest do
       assert {:ok, workflow_case} = Case.insert_case(@config, case_schema)
       assert workflow_case
 
-      assert {:ok, workflow_case} = Case.fetch_case(@config, case_schema.id)
+      assert {:ok, workflow_case} = Case.fetch_case(@config, workflow_case.id)
       assert workflow_case
     end
   end
@@ -55,9 +55,9 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.CaseTest do
       assert {:ok, workflow_case} = Case.insert_case(@config, case_schema)
       assert workflow_case
 
-      assert {:ok, workflow_case} = Case.update_case(@config, case_schema.id, %{state: :active})
+      assert {:ok, workflow_case} = Case.update_case(@config, workflow_case.id, %{state: :active})
 
-      assert {:ok, workflow_case} = Case.fetch_case(@config, case_schema.id)
+      assert {:ok, workflow_case} = Case.fetch_case(@config, workflow_case.id)
       assert workflow_case.state === :active
     end
   end
