@@ -1,7 +1,7 @@
 defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Workflow do
   @moduledoc false
 
-  alias Ecto.Multi
+  use WorkflowMetal.Storage.Adapters.Postgres.Repo
 
   def insert_workflow(config, workflow_schema, workflow_associations_params) do
     %{
@@ -125,17 +125,5 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Workflow do
       |> repo_transaction(config)
 
     :ok
-  end
-
-  defp get_repo(config) do
-    Keyword.fetch!(config, :repo)
-  end
-
-  defp get_schema(name, config) do
-    Module.concat(Keyword.fetch!(config, :schema), name)
-  end
-
-  defp repo_transaction(multi, config) do
-    apply(get_repo(config), :transaction, [multi, config])
   end
 end
