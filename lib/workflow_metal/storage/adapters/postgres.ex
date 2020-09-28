@@ -189,10 +189,10 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres do
       end
 
       @impl true
-      def consume_tokens(adapter_meta, token_ids) do
+      def consume_tokens(adapter_meta, token_ids, consumed_by_task_id) do
         adapter_meta
         |> config()
-        |> Repo.Token.consume_tokens(token_ids)
+        |> Repo.Token.consume_tokens(token_ids, consumed_by_task_id)
         |> unquote(__MODULE__).to_storage_schema()
       end
 
@@ -200,7 +200,7 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres do
       def fetch_unconsumed_tokens(adapter_meta, case_id) do
         adapter_meta
         |> config()
-        |> Repo.Token.fetch_unconsumed_tokens(d)
+        |> Repo.Token.fetch_unconsumed_tokens(case_id)
         |> unquote(__MODULE__).to_storage_schema()
       end
 
