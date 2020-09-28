@@ -7,6 +7,7 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.RepoCase do
   using do
     quote do
       alias TestStorage.Repo
+      alias WorkflowMetal.Storage.Schema
 
       @config [
         repo: TestStorage.Repo,
