@@ -6,7 +6,7 @@ defmodule WorkflowMetalPostgresAdapter.Repo.Migrations.InitWorkflows do
   def up do
     create table("workflows", prefix: @prefix) do
       add :state, :string, null: false
-      add :metadata, :jsonb
+      add :metadata, :map
 
       timestamps()
     end
@@ -15,7 +15,7 @@ defmodule WorkflowMetalPostgresAdapter.Repo.Migrations.InitWorkflows do
 
     create table("places", prefix: @prefix) do
       add :type, :string, null: false
-      add :metadata, :jsonb
+      add :metadata, :map
 
       add :workflow_id, references("workflows", prefix: @prefix, on_delete: :delete_all)
 
@@ -29,7 +29,7 @@ defmodule WorkflowMetalPostgresAdapter.Repo.Migrations.InitWorkflows do
       add :split_type, :string, null: false
       add :executor, :string, null: false
       add :executor_params, :map
-      add :metadata, :jsonb
+      add :metadata, :map
 
       add :workflow_id, references("workflows", prefix: @prefix, on_delete: :delete_all)
 
@@ -40,7 +40,7 @@ defmodule WorkflowMetalPostgresAdapter.Repo.Migrations.InitWorkflows do
 
     create table("arcs", prefix: @prefix) do
       add :direction, :string, null: false
-      add :metadata, :jsonb
+      add :metadata, :map
 
       add :place_id, references("places", prefix: @prefix, on_delete: :delete_all)
       add :transition_id, references("transitions", prefix: @prefix, on_delete: :delete_all)
