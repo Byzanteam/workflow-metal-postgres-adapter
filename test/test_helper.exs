@@ -1,4 +1,4 @@
 ExUnit.start()
 
-WorkflowMetalPostgresAdapter.Repo.start_link()
-Ecto.Adapters.SQL.Sandbox.mode(WorkflowMetalPostgresAdapter.Repo, :manual)
+TestStorage.Repo.start_link()
+Ecto.Adapters.SQL.Sandbox.mode(TestStorage.Repo, :manual)
