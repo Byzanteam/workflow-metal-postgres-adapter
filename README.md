@@ -4,15 +4,57 @@ Workflow Metal Postgres adapter.
 
 ## Use
 
-* Add config for `schema` and `prefix`. Default are `public` and `workflow`
+* Define Schema and Repo. (more detail in `test/support/test_storage/`)
 
 ```elixir
-config :workflow_metal_postgres_adapter, WorkflowMetalPostgresAdapter,
-  schema: "public",
-  prefix: "workflow"
+defmodule TestStorage.Repo do
+  use Ecto.Repo,
+    otp_app: :workflow_metal_postgres_adapter,
+    adapter: Ecto.Adapters.Postgres
+end
+
+defmodule TestStorage.Schema do
+  @moduledoc false
+
+  import WorkflowMetal.Storage.Adapters.Postgres.Schema
+
+  workflow_schema "workflows" do
+    timestamps()
+  end
+
+  place_schema "places" do
+    timestamps()
+  end
+
+  transition_schema "transitions",
+    join_type: TestStorage.TransitionTypes.JoinTypeEnum,
+    split_type: TestStorage.TransitionTypes.SplitTypeEnum do
+    timestamps()
+  end
+
+  arc_schema "arcs" do
+    timestamps()
+  end
+
+  case_schema "cases" do
+    timestamps()
+  end
+
+  token_schema "tokens" do
+    timestamps()
+  end
+
+  task_schema "tasks" do
+    timestamps()
+  end
+
+  workitem_schema "workitems" do
+    timestamps()
+  end
+end
 ```
 
-* Use storage in Workflow Application, pass the application repo.
+* Use storage in Workflow Application, pass the application repo and schema.
 
 ```elixir
   defmodule Workflow do
