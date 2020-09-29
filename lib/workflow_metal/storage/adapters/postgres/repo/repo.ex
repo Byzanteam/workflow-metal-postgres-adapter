@@ -20,7 +20,7 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo do
       end
 
       defp repo_update(changeset, config) do
-        apply(get_repo(config), :update, [changeset, config])
+        apply(get_repo(config), :update, [changeset, Keyword.put(config, :returning, true)])
       end
 
       defp repo_get_by(queryable, clauses, config) do

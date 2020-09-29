@@ -43,6 +43,8 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Token do
   def lock_tokens(config, token_ids, locked_by_task_id) do
     schema = get_schema(Token, config)
 
+    options = Keyword.put(config, :returning, true)
+
     token_ids
     |> Enum.reduce(Multi.new(), fn token_id, multi ->
       changeset =
@@ -52,7 +54,7 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Token do
         |> Ecto.Changeset.change(state: :locked)
         |> Ecto.Changeset.validate_required([:locked_by_task_id])
 
-      Ecto.Multi.update(multi, {:update_token, token_id}, changeset)
+      Multi.update(multi, {:update_token, token_id}, changeset, options)
     end)
     |> repo_transaction(config)
     |> case do
@@ -67,6 +69,8 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Token do
   def unlock_tokens(config, token_ids) do
     schema = get_schema(Token, config)
 
+    options = Keyword.put(config, :returning, true)
+
     token_ids
     |> Enum.reduce(Multi.new(), fn token_id, multi ->
       changeset =
@@ -74,7 +78,7 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Token do
         |> struct(%{id: token_id})
         |> Ecto.Changeset.change(locked_by_task_id: nil, state: :free)
 
-      Ecto.Multi.update(multi, {:update_token, token_id}, changeset)
+      Multi.update(multi, {:update_token, token_id}, changeset, options)
     end)
     |> repo_transaction(config)
     |> case do
@@ -96,6 +100,8 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Token do
         consumed_by_task_id
       end
 
+    options = Keyword.put(config, :returning, true)
+
     token_ids
     |> Enum.reduce(Multi.new(), fn token_id, multi ->
       changeset =
@@ -105,7 +111,7 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Token do
         |> Ecto.Changeset.change(state: :consumed)
         |> Ecto.Changeset.validate_required([:consumed_by_task_id])
 
-      Ecto.Multi.update(multi, {:update_token, token_id}, changeset)
+      Multi.update(multi, {:update_token, token_id}, changeset, options)
     end)
     |> repo_transaction(config)
     |> case do
