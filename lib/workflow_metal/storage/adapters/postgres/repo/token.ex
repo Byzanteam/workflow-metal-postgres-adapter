@@ -51,7 +51,7 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Token do
         schema
         |> struct(%{id: token_id})
         |> Ecto.Changeset.cast(%{locked_by_task_id: locked_by_task_id}, [:locked_by_task_id])
-        |> Ecto.Changeset.change(state: :locked)
+        |> Ecto.Changeset.force_change(:state, :locked)
         |> Ecto.Changeset.validate_required([:locked_by_task_id])
 
       Multi.update(multi, {:update_token, token_id}, changeset, options)
@@ -76,7 +76,9 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Token do
       changeset =
         schema
         |> struct(%{id: token_id})
-        |> Ecto.Changeset.change(locked_by_task_id: nil, state: :free)
+        |> Ecto.Changeset.change()
+        |> Ecto.Changeset.force_change(:locked_by_task_id, nil)
+        |> Ecto.Changeset.force_change(:state, :free)
 
       Multi.update(multi, {:update_token, token_id}, changeset, options)
     end)
@@ -108,7 +110,7 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Token do
         schema
         |> struct(%{id: token_id})
         |> Ecto.Changeset.cast(%{consumed_by_task_id: consumed_by_task_id}, [:consumed_by_task_id])
-        |> Ecto.Changeset.change(state: :consumed)
+        |> Ecto.Changeset.force_change(:state, :consumed)
         |> Ecto.Changeset.validate_required([:consumed_by_task_id])
 
       Multi.update(multi, {:update_token, token_id}, changeset, options)

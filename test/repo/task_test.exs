@@ -29,7 +29,6 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.TaskTest do
     %{transitions: [transition | _]} = associations_params
 
     task_schema = %Schema.Task{
-      id: Ecto.UUID.generate(),
       workflow_id: workflow.id,
       transition_id: transition.id,
       case_id: workflow_case.id,
@@ -42,13 +41,11 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.TaskTest do
     # fetch task
     assert {:ok, task} = Task.fetch_task(@config, task.id)
 
-    assert task.id == task_schema.id
     assert task.case_id == workflow_case.id
     assert task.transition_id == transition.id
     assert task.state == :started
 
     another_task_schema = %Schema.Task{
-      id: Ecto.UUID.generate(),
       workflow_id: workflow.id,
       transition_id: transition.id,
       case_id: workflow_case.id,
@@ -64,11 +61,11 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.TaskTest do
         state: [:allocated]
       )
 
-    assert allocated_task.id === another_task_schema.id
+    assert allocated_task.id === another_task.id
 
     {:ok, tasks} = Task.fetch_tasks(@config, workflow_case.id, state: [:started, :allocated])
 
-    assert MapSet.new(tasks, & &1.id) === MapSet.new([task_schema.id, another_task_schema.id])
+    assert MapSet.new(tasks, & &1.id) === MapSet.new([task.id, another_task.id])
 
     {:ok, tasks} =
       Task.fetch_tasks(@config, workflow_case.id,
@@ -76,7 +73,7 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.TaskTest do
         transition_id: transition.id
       )
 
-    assert MapSet.new(tasks, & &1.id) === MapSet.new([task_schema.id, another_task_schema.id])
+    assert MapSet.new(tasks, & &1.id) === MapSet.new([task.id, another_task.id])
 
     {:ok, [started_task]} =
       Task.fetch_tasks(
@@ -86,11 +83,11 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.TaskTest do
         transition_id: transition.id
       )
 
-    assert started_task.id === task_schema.id
+    assert started_task.id === task.id
 
     # update task
     assert {:ok, updated_task} =
-             Task.update_task(@config, task_schema.id, %{
+             Task.update_task(@config, task.id, %{
                state: :completed,
                token_payload: %{foo: "bar"}
              })
