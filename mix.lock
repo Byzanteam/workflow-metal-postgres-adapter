@@ -14,5 +14,5 @@
   "postgrex": {:hex, :postgrex, "0.15.6", "a464c72010a56e3214fe2b99c1a76faab4c2bb0255cabdef30dea763a3569aa2", [:mix], [{:connection, "~> 1.0", [hex: :connection, repo: "hexpm", optional: false]}, {:db_connection, "~> 2.1", [hex: :db_connection, repo: "hexpm", optional: false]}, {:decimal, "~> 1.5 or ~> 2.0", [hex: :decimal, repo: "hexpm", optional: false]}, {:jason, "~> 1.0", [hex: :jason, repo: "hexpm", optional: true]}], "hexpm", "f99268325ac8f66ffd6c4964faab9e70fbf721234ab2ad238c00f9530b8cdd55"},
   "telemetry": {:hex, :telemetry, "0.4.2", "2808c992455e08d6177322f14d3bdb6b625fbcfd233a73505870d8738a2f4599", [:rebar3], [], "hexpm", "2d1419bd9dda6a206d7b5852179511722e2b18812310d304620c7bd92a13fcef"},
   "typed_struct": {:hex, :typed_struct, "0.2.1", "e1993414c371f09ff25231393b6430bd89d780e2a499ae3b2d2b00852f593d97", [:mix], [], "hexpm", "8f5218c35ec38262f627b2c522542f1eae41f625f92649c0af701a6fab2e11b3"},
-  "workflow_metal": {:git, "https://github.com/Byzanteam/workflow_metal.git", "17442bd447041f9b22a39484c39b58d2198301a2", [branch: "fahchen/refactor/storage"]},
+  "workflow_metal": {:git, "https://github.com/Byzanteam/workflow_metal.git", "5e1c33f0d2e442d55f0e7f530d951e88968b3c2f", [branch: "master"]},
 }

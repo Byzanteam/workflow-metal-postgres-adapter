@@ -35,7 +35,7 @@ defmodule WorkflowMetalPostgresAdapter.MixProject do
       {:ecto_sql, "~> 3.5-pre"},
       {:jason, "~> 1.1"},
       {:postgrex, "~> 0.14"},
-      {:workflow_metal, github: "Byzanteam/workflow_metal", branch: "fahchen/refactor/storage"}
+      {:workflow_metal, github: "Byzanteam/workflow_metal", branch: "master"}
     ]
   end
 
