@@ -1,4 +1,6 @@
 defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo do
+  @moduledoc false
+
   defmacro __using__(_opts) do
     quote do
       alias Ecto.Multi

@@ -5,8 +5,10 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Schema.ExecutorType do
   """
   use Ecto.Type
 
+  @impl true
   def type, do: :string
 
+  @impl true
   def cast(executor) when is_binary(executor) do
     {:ok, executor}
   end
@@ -17,10 +19,12 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Schema.ExecutorType do
 
   def cast(_executor), do: :error
 
+  @impl true
   def load(executor) when is_binary(executor) do
     {:ok, String.to_existing_atom(executor)}
   end
 
+  @impl true
   def dump(executor) when is_atom(executor), do: {:ok, to_string(executor)}
   def dump(executor) when is_binary(executor), do: {:ok, executor}
   def dump(_), do: :error

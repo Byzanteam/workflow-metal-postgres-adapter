@@ -3,6 +3,23 @@ defmodule WorkflowMetal.Storage.Adapters.Util do
 
   alias WorkflowMetal.Storage.Adapters.Postgres.StorageSchema
 
+  @doc """
+  Delegate actions.
+
+  ```elixir
+  defaction Repo.Workflow.insert_workflow(workflow_schema, workflow_associations_params)
+  ```
+
+  Generate code:
+  ```elixir
+  @impl true
+  def fetch_unconsumed_tokens(adapter_meta, workflow_schema, workflow_associations_params) do
+    WorkflowMetal.Storage.Adapters.Util.to_storage_schema(
+      Repo.Token.fetch_unconsumed_tokens(config(adapter_meta), workflow_schema, workflow_associations_params)
+    )
+  end
+  ```
+  """
   defmacro defaction(expr) do
     {
       {_, _, [_, action_name]},
@@ -24,6 +41,7 @@ defmodule WorkflowMetal.Storage.Adapters.Util do
     end
   end
 
+  @doc "use StorageSchema protocol to transform to storage schema"
   def to_storage_schema({:ok, []}), do: {:ok, []}
 
   def to_storage_schema({:ok, schemas}) when is_list(schemas) do
