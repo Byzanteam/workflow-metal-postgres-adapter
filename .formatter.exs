@@ -2,7 +2,8 @@
 [
   inputs: ["{mix,.formatter}.exs", "{config,lib,test}/**/*.{ex,exs}"],
   locals_without_parens: [
-    interface: 2
+    interface: 2,
+    defaction: 1
   ],
   export: [
     locals_without_parens: [
