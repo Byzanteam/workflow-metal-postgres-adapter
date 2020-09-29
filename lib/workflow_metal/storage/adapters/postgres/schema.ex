@@ -251,15 +251,17 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Schema do
           unquote(block)
         end
 
-        def to_storage_schema(%__MODULE__{} = task) do
-          %WorkflowMetal.Storage.Schema.Task{
-            id: task.id,
-            workflow_id: task.workflow_id,
-            transition_id: task.transition_id,
-            case_id: task.case_id,
-            state: task.state,
-            token_payload: task.token_payload
-          }
+        defimpl WorkflowMetal.Storage.Adapters.Postgres.StorageSchema do
+          def transform(%unquote(schema).Task{} = task) do
+            %WorkflowMetal.Storage.Schema.Task{
+              id: task.id,
+              workflow_id: task.workflow_id,
+              transition_id: task.transition_id,
+              case_id: task.case_id,
+              state: task.state,
+              token_payload: task.token_payload
+            }
+          end
         end
       end
     end
