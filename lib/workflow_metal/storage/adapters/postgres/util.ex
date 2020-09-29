@@ -13,9 +13,9 @@ defmodule WorkflowMetal.Storage.Adapters.Util do
   Generate code:
   ```elixir
   @impl true
-  def fetch_unconsumed_tokens(adapter_meta, workflow_schema, workflow_associations_params) do
+  def insert_workflow(adapter_meta, workflow_schema, workflow_associations_params) do
     WorkflowMetal.Storage.Adapters.Util.to_storage_schema(
-      Repo.Token.fetch_unconsumed_tokens(config(adapter_meta), workflow_schema, workflow_associations_params)
+      Repo.Token.insert_workflow(config(adapter_meta), workflow_schema, workflow_associations_params)
     )
   end
   ```
