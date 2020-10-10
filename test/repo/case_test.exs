@@ -17,6 +17,7 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.CaseTest do
 
       assert {:ok, workflow_case} = Case.insert_case(@config, case_schema)
       assert workflow_case
+      assert workflow_case.id === case_id
     end
   end
 

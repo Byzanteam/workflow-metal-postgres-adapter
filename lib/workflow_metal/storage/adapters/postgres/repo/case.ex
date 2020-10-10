@@ -6,10 +6,20 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Case do
   def insert_case(config, case_schema) do
     schema = get_schema(Case, config)
 
-    schema
-    |> struct()
-    |> Ecto.Changeset.cast(Map.from_struct(case_schema), [:state, :workflow_id])
-    |> Ecto.Changeset.change(id: Ecto.UUID.generate())
+    changeset =
+      schema
+      |> struct()
+      |> Ecto.Changeset.cast(Map.from_struct(case_schema), [:id, :state, :workflow_id])
+
+    changeset
+    |> Ecto.Changeset.get_field(:id)
+    |> case do
+      nil ->
+        Ecto.Changeset.change(changeset, %{id: Ecto.UUID.generate()})
+
+      _ ->
+        changeset
+    end
     |> Ecto.Changeset.validate_required([:id, :state, :workflow_id])
     |> repo_insert(config)
   end
