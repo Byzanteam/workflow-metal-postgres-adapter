@@ -19,6 +19,19 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.CaseTest do
       assert workflow_case
       assert workflow_case.id === case_id
     end
+
+    test "return already_exists", %{workflow: workflow} do
+      case_id = Ecto.UUID.generate()
+
+      case_schema = %Schema.Case{
+        id: case_id,
+        state: :created,
+        workflow_id: workflow.id
+      }
+
+      assert {:ok, _workflow_case} = Case.insert_case(@config, case_schema)
+      assert {:error, :already_exists} = Case.insert_case(@config, case_schema)
+    end
   end
 
   describe "fetch_case/2" do

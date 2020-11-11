@@ -23,6 +23,22 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.WorkflowTest do
     assert length(places) == 5
   end
 
+  test "return already_exists" do
+    assert {:ok, _workflow} =
+             Workflow.insert_workflow(
+               @config,
+               @workflow_schema,
+               @workflow_associations_params
+             )
+
+    assert {:error, :already_exists} =
+             Workflow.insert_workflow(
+               @config,
+               @workflow_schema,
+               @workflow_associations_params
+             )
+  end
+
   describe "fetch workflow/2" do
     setup :insert_workflow_schema
 

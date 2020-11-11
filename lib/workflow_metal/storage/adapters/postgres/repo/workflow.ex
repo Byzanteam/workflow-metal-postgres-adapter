@@ -20,13 +20,26 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Workflow do
       {:ok, %{workflow: workflow}} ->
         {:ok, workflow}
 
-      {:error, _failed_operation, failed_value, _changes_so_far} ->
-        {:error, failed_value}
+      {:error, :workflow, changeset, _changes_so_far} ->
+        pk_name = get_pk_name(Workflow, config)
+
+        if Enum.any?(
+             changeset.errors,
+             &match?({:id, {_msg, [constraint: :unique, constraint_name: ^pk_name]}}, &1)
+           ) do
+          {:error, :already_exists}
+        else
+          {:error, changeset}
+        end
+
+      {:error, _failed_operation, changeset, _changes_so_far} ->
+        {:error, changeset}
     end
   end
 
   defp do_insert_workflow(multi, workflow_schema, config) do
     params = Map.from_struct(workflow_schema)
+    pk_name = get_pk_name(Workflow, config)
 
     changeset =
       Workflow
@@ -34,6 +47,7 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo.Workflow do
       |> struct()
       |> Ecto.Changeset.cast(params, [:id, :state])
       |> Ecto.Changeset.validate_required([:id, :state])
+      |> Ecto.Changeset.unique_constraint(:id, name: pk_name)
 
     multi
     |> Multi.insert(:workflow, changeset)

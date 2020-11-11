@@ -32,6 +32,11 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Repo do
       defp repo_all(queryable, config) do
         apply(get_repo(config), :all, [queryable, config])
       end
+
+      defp get_pk_name(name, config) do
+        schema = get_schema(name, config)
+        "#{schema.__schema__(:source)}_pkey"
+      end
     end
   end
 end
