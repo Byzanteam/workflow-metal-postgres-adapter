@@ -199,7 +199,7 @@ defmodule WorkflowMetal.Storage.Adapters.Postgres.Schema do
       unquote(schema_attributes())
 
       schema unquote(source) do
-        field :state, Ecto.Enum, values: [:created, :active, :canceled, :finished]
+        field :state, Ecto.Enum, values: [:created, :active, :terminated, :finished]
 
         belongs_to :workflow, unquote(schema).Workflow
 
